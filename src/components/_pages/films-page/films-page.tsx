@@ -1,17 +1,20 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { Field, TypeNumber } from '../../../const';
 import { FILMS } from '../../../mock/mock';
 import { useGetFilmsByParamsQuery } from '../../../services/query-api';
 import { Film } from '../../../types/types';
+import { convertSearchForServer } from '../../../utils/url-utils';
 import { getSyntheticRating } from '../../../utils/utils';
+import Filter from '../../filter/filter';
 
 export function FilmCard({film} : {film: Film}) {
+
 
   const {name, poster, rating, year, movieLength, votes, id, description} = film;
 
   return (
     <div className="card" style={{width: '30%'}}>
-      <Link to={`/films/${id}`}>
+      <Link  to={`/films/${id}`}>
         <div className="card-image waves-effect waves-block waves-light">
           <img className="activator" src={poster.previewUrl} alt={name}/>
         </div>
@@ -34,8 +37,14 @@ export function FilmCard({film} : {film: Film}) {
 }
 
 
+//?field=year&search=1990-2022&field=rating.kp&search=5.6-10&sortField=votes.kp&sortType=-1
 export default function FilmsPage() {
-  // const {isError, isFetching, data} = useGetFilmsByParamsQuery({filter: Field.TypeNumber, filterParam: TypeNumber.Serial, sort: Field.Votes.Kp, sortType: -1});
+
+
+  // const {search} = useLocation();
+
+
+  // const {isError, isFetching, data} = useGetFilmsByParamsQuery(search);
 
 
   // if (isFetching) {
@@ -49,7 +58,7 @@ export default function FilmsPage() {
   // const films = data.docs as Film[];
 
   const films = FILMS;
-  console.log(films);
+  // console.log(films);
 
 
   const filmList = films.map((item) => <FilmCard film={item} key={item.id}/>);
@@ -57,30 +66,18 @@ export default function FilmsPage() {
 
   return (
     <main className="mdl-layout__content">
-      <div className="page-content">
+      <div className="page-content row">
 
-        <div className="mdl-grid mdl-center">
-          <div className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet">
-            <div className="mdl-grid">
-              <div className="mdl-cell mdl-cell--8-col mdl-cell--12-col-tablet">
-                <h1 className="title-headline">Header
-                </h1>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Filter/>
 
 
-        <div className="mdl-grid mdl-center">
-          <div className="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet">
-            <div className="mdl-grid">
-              <div style={{display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap'}}>
+        <div className="mdl-grid mdl-center col s8">
 
-                {filmList}
+          <div style={{display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap'}}>
+
+            {filmList}
 
 
-              </div>
-            </div>
           </div>
         </div>
 

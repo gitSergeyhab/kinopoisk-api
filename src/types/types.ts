@@ -1,3 +1,5 @@
+import { ReducerState } from '../store/store';
+
 type Name = {
   '_id': string,
   'name': string,
@@ -195,3 +197,5 @@ export type FilmById = {
 
 
 export type FilmSearchParam = {filter: string, sort: string, filterParam: string, sortType: number};
+
+export type State = ReducerState;

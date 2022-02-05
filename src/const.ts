@@ -27,3 +27,22 @@ export const TypeNumber = {
   AnimatesSerial: '5',
   Show: '6',
 };
+
+export const InitFilterParam = {
+  Rating: {
+    Start: 7,
+    End: 10,
+  },
+};
+
+export const FilterRange = {
+  Rating: {
+    Start: 0,
+    End: 10,
+  },
+  Year: {
+    Start: 1900,
+    Middle: 1990,
+    End: 2023,
+  },
+};
