@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
-import { FilmById } from '../types/types';
+import { OptionType } from '../types/types';
 
 export const enum ActionType {
   // SetOneFilm = 'film/SetOneFilm',
@@ -10,6 +10,7 @@ export const enum ActionType {
   SetEndYear = 'filter/SetEndYear',
   SetStartRating = 'filter/SetStartRating',
   SetEndRating = 'filter/SetEndRating',
+  SetVoteOption = 'filter/SetVoteOption',
 
 
 }
@@ -19,6 +20,9 @@ export const setEndYear = createAction(ActionType.SetEndYear, (year: number) => 
 
 export const setStartRating = createAction(ActionType.SetStartRating, (year: number) => ({payload: year}));
 export const setEndRating = createAction(ActionType.SetEndRating, (year: number) => ({payload: year}));
+
+
+export const setVoteOption = createAction(ActionType.SetVoteOption, (option: OptionType) => ({payload: option}));
 
 
 // export const setOneFilm = createAction(ActionType.SetOneFilm, (film: FilmById) => ({payload: film}));

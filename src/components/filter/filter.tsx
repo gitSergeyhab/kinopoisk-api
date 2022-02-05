@@ -1,11 +1,12 @@
-import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { Field } from '../../const';
-import { getEndRating, getEndYear, getStartRating, getStartYear } from '../../store/filter-reducer/filter-reducer-selectors';
-import { getObjectParam, getStringParam } from '../../utils/url-utils';
+import { useNavigate } from 'react-router-dom';
+import { getEndRating, getEndYear, getStartRating, getStartYear, getVoteOption } from '../../store/filter-reducer/filter-reducer-selectors';
+import { getStringParam } from '../../utils/url-utils';
 import RatingsFilter from './rating-filter/rating-filter';
 import YearsFilter from './years-filter/years-filter';
+
+import './filter.css';
+import VotesFilter from './votes-filter/votes-filter';
 
 
 export default function Filter() {
@@ -16,31 +17,25 @@ export default function Filter() {
   const endYear = useSelector(getEndYear);
   const startRating = useSelector(getStartRating);
   const endRating = useSelector(getEndRating);
+  const voteOption = useSelector(getVoteOption);
 
-
-  // const [, setSearchParams] = useSearchParams();
-
-
-  // useEffect()
-
-
-  const handleSearchClick = () => navigate(getStringParam({startRating, endRating, startYear, endYear}));
+  const handleSearchClick = () => navigate(getStringParam({startRating, endRating, startYear, endYear, voteOption}));
 
   return(
-    <div className="col s4" style={{padding: '20px 10px'}}>
+    <form className="col s3 react-filter grey darken-4 white-text react-filter">
       <YearsFilter/>
       <RatingsFilter/>
+      <VotesFilter/>
 
-      <div>1</div>
-      <div>2</div>
       <button
         onClick={handleSearchClick}
-        className='btn' type='button'
+        className='btn black' type='button'
+        style={{marginBottom: '20px'}}
       >Искать
       </button>
 
 
-    </div>
+    </form>
   );
 }
 

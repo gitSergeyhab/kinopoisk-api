@@ -1,0 +1,24 @@
+.react-filter {
+  font-weight: 600;
+}
+
+.react-filter fieldset {
+  margin: 10px 0;
+  padding: 0 20px;
+}
+
+
+.react-filters {
+  padding: 30px 0 ;
+}
+
+.react-filters-text {
+  margin: 3px;
+}
+
+.noUi-connect {
+  background: black !important;
+}
+.noUi-horizontal .noUi-handle, .noUi-vertical .noUi-handle {
+  background: black;
+}

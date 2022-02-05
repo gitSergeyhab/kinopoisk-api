@@ -1,8 +1,8 @@
-import { Field, TypeNumber } from '../const';
+import { Field, Options, TypeNumber } from '../const';
 import { TOKEN } from '../secret-const';
-import { FilmSearchParam, State } from '../types/types';
+import { FilmSearchParam, OptionType } from '../types/types';
 
-const URL_BY_ID = '/movie?search=389&field=id';
+const TOO_MANY_VOTES = 999999999;
 
 
 // api.get('/character?name=/ga/i').then((res) => console.log(res)).catch((e) => console.log('error!!!', e));
@@ -14,19 +14,21 @@ export const getUrlByFilmID = (id: string) => `/movie?search=${id}&field=id&toke
 export const getUrlFilmsByParams = ({filter = Field.TypeNumber, sort = Field.Votes.Kp, filterParam = TypeNumber.Movie, sortType = -1} : FilmSearchParam) =>
   `/movie?field=${filter}&search=${filterParam}&sortField=${sort}&sortType=${sortType}&token=${TOKEN}`;
 
-type TypeParam = {startRating: number, endRating: number, startYear: number, endYear: number};
+type TypeParam = {startRating: number, endRating: number, startYear: number, endYear: number, voteOption: OptionType};
 
 
-export const getObjectParam = ({startRating, endRating, startYear, endYear} : TypeParam) => ({
+export const getObjectParam = ({startRating, endRating, startYear, endYear, voteOption} : TypeParam) => ({
   [Field.Year]: `${startYear}-${endYear}`,
   [Field.Rating.Kp]: `${startRating}-${endRating}`,
+  [Field.Votes.Kp]: `${voteOption.value}-${TOO_MANY_VOTES}`,
 });
 
-export const getStringParam = ({startRating, endRating, startYear, endYear} : TypeParam) => {
-  const param = getObjectParam({startRating, endRating, startYear, endYear});
+export const getStringParam = ({startRating, endRating, startYear, endYear, voteOption} : TypeParam) => {
+  const param = getObjectParam({startRating, endRating, startYear, endYear, voteOption});
   const year = param[Field.Year];
   const rating = param[Field.Rating.Kp];
-  return `?field=${Field.Year}&search=${year}&field=${Field.Rating.Kp}&search=${rating}&sortField=${Field.Votes.Kp}&sortType=${-1}`;
+  const vote = param[Field.Votes.Kp];
+  return `?field=${Field.Year}&search=${year}&field=${Field.Rating.Kp}&search=${rating}&field=${Field.Votes.Kp}&search=${vote}&sortField=${Field.Votes.Kp}&sortType=${-1}`;
 };
 
 export const convertSearchForServer = (search: string) => {
@@ -58,4 +60,32 @@ export const getParamsFromSearch = (searchParams: URLSearchParams, needField: st
     return {start, end};
   }
   return {start: +ratings, end: +ratings};
+};
+
+export const getVoteOptionFromSearch = (searchParams: URLSearchParams) => {
+  const fields = searchParams.getAll('field');
+  const searches = searchParams.getAll('search');
+
+  const index = fields.findIndex((field) => field === Field.Votes.Kp);
+
+  if (index === -1) {
+    return Options[0];
+  }
+
+  const votes = +searches[index].split('-')[0] || 0;
+
+  if (votes < +Options[1].value) {
+    return Options[0];
+  }
+  if (votes < +Options[2].value) {
+    return Options[1];
+  }
+  if (votes < +Options[3].value) {
+    return Options[2];
+  }
+  if (votes < +Options[4].value) {
+    return Options[3];
+  }
+
+  return Options[4];
 };

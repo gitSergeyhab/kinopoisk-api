@@ -100,10 +100,10 @@ export default function OneFilmPage(){
 
   const {name, votes, year, rating, poster, description, countries, genres, persons, similarMovies} = FILM_BY_ID;
 
-  const countryList = countries.slice(0, countryNum).map((item) => <ItemLi item={item.name} key={item.name}/>);
-  const genreList = genres.slice(0, genreNum).map((item) => <ItemLi item={item.name} key={item.name}/>);
-  const personList = persons.slice(0, StartValue.Person).map((item) => <PersonLi person={item} key={getPersonKey(item.id, item.enProfession)}/>);
-  const similarMoviesList = similarMovies.slice(0, similarNum).map((item) => <SimilarMoviesLi movie={item} key={item.id}/>);
+  const countryList = countries ? countries.slice(0, countryNum).map((item) => <ItemLi item={item.name} key={item.name}/>) : null;
+  const genreList = genres ? genres.slice(0, genreNum).map((item) => <ItemLi item={item.name} key={item.name}/>) : null;
+  const personList = persons ? persons.slice(0, StartValue.Person).map((item) => <PersonLi person={item} key={getPersonKey(item.id, item.enProfession)}/>) : null;
+  const similarMoviesList = similarMovies ? similarMovies.slice(0, similarNum).map((item) => <SimilarMoviesLi movie={item} key={item.id}/>) : null;
 
   const {ratingSynth, forAudience, forCritics} = getSyntheticRating(rating, votes);
 
@@ -117,14 +117,15 @@ export default function OneFilmPage(){
   const btnOpenSimilar = createMovieBtnClick(handleMoreSimilarClick, 'add_circle_outline', 'показать еще');
   const btnCloseSimilar = createMovieBtnClick(handleHideSimilarClick, 'remove_circle_outline', 'сбросить');
 
-  const btnCountry = countryNum < countries.length ? btnOpenCountries : btnCloseCountries;
-  const btnGenre = genreNum < genres.length ? btnOpenGenres : btnCloseGenres;
-  const btnSimilar = similarNum < similarMovies.length ? btnOpenSimilar : btnCloseSimilar;
+  const btnCountry = countries && (countryNum < countries.length) ? btnOpenCountries : btnCloseCountries;
+  const btnGenre = genres && (genreNum < genres.length) ? btnOpenGenres : btnCloseGenres;
+  const btnSimilar = similarMovies && (similarNum < similarMovies.length) ? btnOpenSimilar : btnCloseSimilar;
 
 
   return (
-    <div className="container row">
-      <div className="col s12 brown darken-3 white-text text-lighten-4">
+    <div className="row black">
+      <div className="col s1"></div>
+      <div className="col s10 brown darken-3 white-text text-lighten-4">
         <h2 className="header center-align">{name}</h2>
         <div className="card horizontal blue-grey darken-1 black-text">
           <div className="card-image">
@@ -161,7 +162,7 @@ export default function OneFilmPage(){
                     <div className="row">
                       <div className="col s7"><span className="flow-text">Страны:</span></div>
                       <div className="col s5">
-                        {countries.length > 1 ? btnCountry : null}
+                        {countries && countries.length > 1 ? btnCountry : null}
                       </div>
                     </div>
 
@@ -177,7 +178,7 @@ export default function OneFilmPage(){
                     <div className="row">
                       <div className="col s7"><span className="flow-text">Жанры:</span></div>
                       <div className="col s5">
-                        {genres.length > 1 ? btnGenre : null}
+                        {genres && genres.length > 1 ? btnGenre : null}
                       </div>
                     </div>
 
@@ -221,7 +222,7 @@ export default function OneFilmPage(){
             {similarMoviesList}
 
           </div>
-          {similarMovies.length > 1 ? btnSimilar : null}
+          {similarMovies && similarMovies.length > 1 ? btnSimilar : null}
         </div>
 
 

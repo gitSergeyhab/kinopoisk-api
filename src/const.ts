@@ -46,3 +46,11 @@ export const FilterRange = {
     End: 2023,
   },
 };
+
+export const Options = [
+  { value: '0', label: 'Все'},
+  { value: '500', label: 'Даже малоизвестные'},
+  { value: '5000', label: 'Начиная с более-менее известных'},
+  { value: '50000', label: 'Только известные'},
+  { value: '300000', label: 'Топ'},
+];

@@ -37,7 +37,6 @@ export function FilmCard({film} : {film: Film}) {
 }
 
 
-//?field=year&search=1990-2022&field=rating.kp&search=5.6-10&sortField=votes.kp&sortType=-1
 export default function FilmsPage() {
 
 
@@ -65,13 +64,14 @@ export default function FilmsPage() {
 
 
   return (
-    <main className="mdl-layout__content">
-      <div className="page-content row">
+    <main className="mdl-layout__content row center-align black">
+      <div className="col s1"></div>
+      <div className="page-content col s10 row  grey darken-1">
 
         <Filter/>
 
 
-        <div className="mdl-grid mdl-center col s8">
+        <div className="mdl-grid mdl-center col s9">
 
           <div style={{display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap'}}>
 
