@@ -1,4 +1,4 @@
-import { Field, Options, TypeNumber } from '../const';
+import { Field, Options, SORT_CATEGORIES } from '../const';
 import { TOKEN } from '../secret-const';
 import { FilmSearchParam, OptionType } from '../types/types';
 
@@ -11,10 +11,10 @@ const TOO_MANY_VOTES = 999999999;
 
 export const getUrlByFilmID = (id: string) => `/movie?search=${id}&field=id&token=${TOKEN}`;
 
-export const getUrlFilmsByParams = ({filter = Field.TypeNumber, sort = Field.Votes.Kp, filterParam = TypeNumber.Movie, sortType = -1} : FilmSearchParam) =>
+export const getUrlFilmsByParams = ({filter, sort, filterParam, sortType} : FilmSearchParam) =>
   `/movie?field=${filter}&search=${filterParam}&sortField=${sort}&sortType=${sortType}&token=${TOKEN}`;
 
-type TypeParam = {startRating: number, endRating: number, startYear: number, endYear: number, voteOption: OptionType};
+type TypeParam = {startRating: number, endRating: number, startYear: number, endYear: number, voteOption: OptionType, category: string, sortField: string, sortType: string};
 
 
 export const getObjectParam = ({startRating, endRating, startYear, endYear, voteOption} : TypeParam) => ({
@@ -23,12 +23,18 @@ export const getObjectParam = ({startRating, endRating, startYear, endYear, vote
   [Field.Votes.Kp]: `${voteOption.value}-${TOO_MANY_VOTES}`,
 });
 
-export const getStringParam = ({startRating, endRating, startYear, endYear, voteOption} : TypeParam) => {
-  const param = getObjectParam({startRating, endRating, startYear, endYear, voteOption});
-  const year = param[Field.Year];
-  const rating = param[Field.Rating.Kp];
-  const vote = param[Field.Votes.Kp];
-  return `?field=${Field.Year}&search=${year}&field=${Field.Rating.Kp}&search=${rating}&field=${Field.Votes.Kp}&search=${vote}&sortField=${Field.Votes.Kp}&sortType=${-1}`;
+const getPart = (name: string, value: string) => `field=${name}&search=${value}`;
+
+export const getStringParam = ({startRating, endRating, startYear, endYear, voteOption, category, sortField, sortType} : TypeParam) => {
+  const param = getObjectParam({startRating, endRating, startYear, endYear, voteOption, category, sortField, sortType});
+
+  const yearPart = getPart(Field.Year, param[Field.Year]);
+  const ratingPart = getPart(Field.Rating.Kp, param[Field.Rating.Kp]);
+  const votePart = getPart(Field.Votes.Kp, param[Field.Votes.Kp]);
+  const categoryPart = category ? getPart(Field.TypeNumber, category): '';
+  const sortPart = `sortField=${sortField}&sortType=${sortType}`;
+
+  return `?${yearPart}&${ratingPart}&${votePart}&${categoryPart}&${sortPart}`;
 };
 
 export const convertSearchForServer = (search: string) => {
@@ -88,4 +94,31 @@ export const getVoteOptionFromSearch = (searchParams: URLSearchParams) => {
   }
 
   return Options[4];
+};
+
+
+export const getCheckedBtn = (searchParams: URLSearchParams) => {
+  const fields = searchParams.getAll('field');
+  const searches = searchParams.getAll('search');
+
+  const index = fields.findIndex((field) => field === Field.TypeNumber);
+
+  if (index === -1) {
+    return '';
+  }
+
+  return searches[index] || '';
+};
+
+export const getSortingField = (searchParams: URLSearchParams) => {
+  const field = searchParams.get(Field.SortField);
+
+  return field ? field : SORT_CATEGORIES[0].value;
+};
+
+
+export const getSortingType = (searchParams: URLSearchParams) => {
+  const sort = searchParams.get(Field.SortType);
+
+  return sort && sort === '1' ? sort : '-1';
 };

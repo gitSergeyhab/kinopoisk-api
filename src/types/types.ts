@@ -198,7 +198,9 @@ export type FilmById = {
 
 export type FilmSearchParam = {filter: string, sort: string, filterParam: string, sortType: number};
 
-export type OptionType = { value: string, label: string }
+export type OptionType = { value: string, label: string };
+
+export type TypeBtn = {name: string, value: string};
 
 
 export type State = ReducerState;

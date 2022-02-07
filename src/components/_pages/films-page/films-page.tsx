@@ -6,6 +6,8 @@ import { Film } from '../../../types/types';
 import { convertSearchForServer } from '../../../utils/url-utils';
 import { getSyntheticRating } from '../../../utils/utils';
 import Filter from '../../filter/filter';
+import TabsOrder from '../../tabs-order/tabs-order';
+import Tabs from '../../tabs/tabs';
 
 export function FilmCard({film} : {film: Film}) {
 
@@ -26,7 +28,7 @@ export function FilmCard({film} : {film: Film}) {
 
       </div>
       <div className="card-reveal">
-        <span className="card-title grey-text text-darken-4">Card Title<i className="material-icons right">close</i></span>
+        <span className="card-title grey-text text-darken-4"><i className="material-icons right">close</i></span>
         <p>Год: {year}</p>
         <p>Время: {movieLength} минут</p>
         <p>{description}</p>
@@ -40,23 +42,23 @@ export function FilmCard({film} : {film: Film}) {
 export default function FilmsPage() {
 
 
-  // const {search} = useLocation();
+  const {search} = useLocation();
 
 
-  // const {isError, isFetching, data} = useGetFilmsByParamsQuery(search);
+  const {isError, isFetching, isLoading, data} = useGetFilmsByParamsQuery(search);
 
 
-  // if (isFetching) {
-  //   return <h2>isFetching</h2>;
-  // }
+  if (isLoading) {
+    return <h2>isFetching</h2>;
+  }
 
-  // if (isError || !data) {
-  //   return <h2>isError</h2>;
-  // }
+  if (isError || !data) {
+    return <h2>isError</h2>;
+  }
 
-  // const films = data.docs as Film[];
+  const films = data.docs as Film[];
 
-  const films = FILMS;
+  // const films = FILMS;
   // console.log(films);
 
 
@@ -72,6 +74,11 @@ export default function FilmsPage() {
 
 
         <div className="mdl-grid mdl-center col s9">
+          <div className="row grey darken-3">
+            <Tabs/>
+            <TabsOrder/>
+          </div>
+
 
           <div style={{display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap'}}>
 

@@ -17,23 +17,20 @@ export const Field = {
     Tmdb: 'votes.tmdb',
   },
   MovieLength: 'movieLength',
+  SortField: 'sortField',
+  SortType: 'sortType',
 };
 
 export const TypeNumber = {
-  Movie: '1',
-  Serial: '2',
-  Cartoon: '3',
-  Anime: '4',
-  AnimatesSerial: '5',
-  Show: '6',
+  All: {value: '', name: 'Все'},
+  Movie: {value: '1', name: 'Фильмы'},
+  Serial: {value: '2', name: 'Сериалы'},
+  Cartoon: {value: '3', name: 'Анимация'},
+  Anime: {value: '4', name: 'Аниме'},
+  AnimatesSerial: {value: '5', name: 'Аниме-сериалы'},
+  Show: {value: '6', name: 'ТВ - ШОУ'},
 };
 
-export const InitFilterParam = {
-  Rating: {
-    Start: 7,
-    End: 10,
-  },
-};
 
 export const FilterRange = {
   Rating: {
@@ -53,4 +50,15 @@ export const Options = [
   { value: '5000', label: 'Начиная с более-менее известных'},
   { value: '50000', label: 'Только известные'},
   { value: '300000', label: 'Топ'},
+];
+
+export const SORT_CATEGORIES = [
+  {name: 'По популярности', value: Field.Votes.Kp},
+  {name: 'По Дате выхода', value: Field.Year},
+  {name: 'По рейтингу КП', value: Field.Rating.Kp},
+];
+
+export const ORDER_CATEGORIES = [
+  {name: 'arrow_drop_down', value: '-1'},
+  {name: 'arrow_drop_up', value: '1'},
 ];

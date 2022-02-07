@@ -11,7 +11,11 @@ export const enum ActionType {
   SetStartRating = 'filter/SetStartRating',
   SetEndRating = 'filter/SetEndRating',
   SetVoteOption = 'filter/SetVoteOption',
+  SetCategory = 'filter/SetCategory',
+  SetSortField = 'filter/SetSortField',
+  SetSortType = 'filter/SetSortType',
 
+  ResetFilter = 'filter/ResetFilter',
 
 }
 
@@ -24,6 +28,13 @@ export const setEndRating = createAction(ActionType.SetEndRating, (year: number)
 
 export const setVoteOption = createAction(ActionType.SetVoteOption, (option: OptionType) => ({payload: option}));
 
+export const setCategory = createAction(ActionType.SetCategory, (category: string) => ({payload: category}));
+
+export const setSortField = createAction(ActionType.SetSortField, (category: string) => ({payload: category}));
+export const setSortType = createAction(ActionType.SetSortType, (category: string) => ({payload: category}));
+
+
+export const resetFilter = createAction(ActionType.ResetFilter);
 
 // export const setOneFilm = createAction(ActionType.SetOneFilm, (film: FilmById) => ({payload: film}));
 // export const setOneFilmError = createAction(ActionType.SetOneFilmError, (status: boolean) => ({payload: status}));

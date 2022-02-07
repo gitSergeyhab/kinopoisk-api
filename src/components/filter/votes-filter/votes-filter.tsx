@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
 import Select from 'react-select';
 import { Options } from '../../../const';
 import { setVoteOption } from '../../../store/action';
+import { getVoteOption } from '../../../store/filter-reducer/filter-reducer-selectors';
 import { getVoteOptionFromSearch } from '../../../utils/url-utils';
 
 
@@ -22,6 +23,7 @@ export default function VotesFilter () {
   const [searchParams] = useSearchParams();
 
   const optionFromUrl = getVoteOptionFromSearch(searchParams);
+  const optionFromStore = useSelector(getVoteOption);
 
   const dispatch = useDispatch();
 
@@ -38,7 +40,7 @@ export default function VotesFilter () {
           <div className="App">
             <Select
 
-              defaultValue={optionFromUrl}
+              value={optionFromStore}
               onChange={(item) => {
                 if (Array.isArray(item)) {
                   throw new Error('Unexpected type passed to ReactSelect onChange handler');

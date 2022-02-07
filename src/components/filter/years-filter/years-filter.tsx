@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import Nouislider from 'nouislider-react';
 
@@ -27,8 +27,8 @@ export default function YearsFilter () {
 
 
   const onSlide = (render: any, handle: any, value: number[], un: any, percent: any) => {
-    dispatch(setStartYear( Math.round(value[0]) ));
-    dispatch(setEndYear( Math.round(value[1])) );
+    dispatch(setStartYear(Math.round(value[0])));
+    dispatch(setEndYear(Math.round(value[1])));
   };
 
 
@@ -42,6 +42,9 @@ export default function YearsFilter () {
         <Nouislider
           className='range-field'
           connect
+          step={1}
+          // start={[startYear, endYear]}
+
           start={[start, end]}
           behaviour="tap"
           range={{

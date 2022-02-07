@@ -24,6 +24,7 @@ export default function RatingsFilter () {
     dispatch(setEndRating(end));
   }, [start, end, dispatch]);
 
+
   const startRating = useSelector(getStartRating);
   const endRating = useSelector(getEndRating);
 
@@ -39,12 +40,17 @@ export default function RatingsFilter () {
       <legend>Рейтинг Кинопоиска</legend>
       <div className='react-filters'>
         <div className='react-filters-text'>
-         от <span className="orange-text">{startRating}</span> до  <span className="orange-text"> {endRating} </span> <i className="large grade material-icons orange-text" style={{fontSize: '1.1rem'}}>grade</i>
+          от <span className="orange-text">{startRating}</span> до  <span className="orange-text"> {endRating} </span> <i className="large grade material-icons orange-text" style={{fontSize: '1.1rem'}}>grade</i>
         </div>
         <Nouislider
+
           id='slider-range'
           connect
-          start={[start, end]}
+          step={0.1}
+
+          start={[startRating, endRating]}
+
+
           behaviour="tap"
           range={{
             min: [FilterRange.Rating.Start],
