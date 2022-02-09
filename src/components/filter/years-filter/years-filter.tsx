@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useSearchParams } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
 import Nouislider from 'nouislider-react';
 
 import { getEndYear, getStartYear } from '../../../store/filter-reducer/filter-reducer-selectors';
@@ -9,11 +9,16 @@ import { getParamsFromSearch } from '../../../utils/url-utils';
 import { Field, FilterRange } from '../../../const';
 
 
-export default function YearsFilter () {
+export default function YearsFilter ({reset} : {reset : boolean}) {
 
   const [searchParams] = useSearchParams();
 
+
   const {start, end} = getParamsFromSearch(searchParams, Field.Year, FilterRange.Year.Start, FilterRange.Year.End);
+  const [startEnd, setStartEnd] = useState([start, end]);
+
+  const startYear = useSelector(getStartYear);
+  const endYear = useSelector(getEndYear);
 
   const dispatch = useDispatch();
 
@@ -22,8 +27,19 @@ export default function YearsFilter () {
     dispatch(setEndYear(end));
   }, [start, end, dispatch]);
 
-  const startYear = useSelector(getStartYear);
-  const endYear = useSelector(getEndYear);
+  const handleClick = () => setStartEnd([startYear, endYear]);
+
+  const ref = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    if (reset && ref.current) {
+      // setStartEnd([startYear, endYear]);
+      // setTimeout(() => ref.current ? setStartEnd([startYear, endYear]): null, 0); / а так не работает / да и вообще - магия ((
+
+      ref.current.click();
+      setTimeout(() => ref.current ? ref.current.click() : null, 0);
+    }
+  }, [reset]);
 
 
   const onSlide = (render: any, handle: any, value: number[], un: any, percent: any) => {
@@ -35,6 +51,7 @@ export default function YearsFilter () {
   return (
     <fieldset className='grey darken-3'>
       <legend>Период</legend>
+      <button onClick={handleClick} type='button' ref={ref} style={{display: 'none'}}></button>
       <div className='react-filters'>
         <div className='react-filters-text'>
         с <span className="orange-text">{startYear}</span> по  <span className="orange-text"> {endYear} </span> год
@@ -43,9 +60,7 @@ export default function YearsFilter () {
           className='range-field'
           connect
           step={1}
-          // start={[startYear, endYear]}
-
-          start={[start, end]}
+          start={startEnd}
           behaviour="tap"
           range={{
             min: [FilterRange.Year.Start],
@@ -53,6 +68,7 @@ export default function YearsFilter () {
             max: [FilterRange.Year.End],
           }}
           onSlide={onSlide}
+
         />
       </div>
     </fieldset>

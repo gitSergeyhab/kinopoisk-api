@@ -202,5 +202,23 @@ export type OptionType = { value: string, label: string };
 
 export type TypeBtn = {name: string, value: string};
 
+export type FilmCard = {
+  name: string;
+  poster: Poster;
+  rating: Rating;
+  year: number;
+  movieLength: number | null | undefined;
+  votes: Votes;
+  id: string | number;
+  description: string;
+}
+
+export type FilmCardData = {
+  filmCard: FilmCard,
+  star: number,
+  order: number,
+}
+
+export type FilmCardsData = {[id: string]: FilmCardData};
 
 export type State = ReducerState;

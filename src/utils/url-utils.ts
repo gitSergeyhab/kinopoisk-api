@@ -74,7 +74,7 @@ export const getVoteOptionFromSearch = (searchParams: URLSearchParams) => {
 
   const index = fields.findIndex((field) => field === Field.Votes.Kp);
 
-  if (index === -1) {
+  if (index === -1 || !searches[index]) {
     return Options[0];
   }
 
@@ -103,7 +103,7 @@ export const getCheckedBtn = (searchParams: URLSearchParams) => {
 
   const index = fields.findIndex((field) => field === Field.TypeNumber);
 
-  if (index === -1) {
+  if (index === -1 || !searches[index]) {
     return '';
   }
 

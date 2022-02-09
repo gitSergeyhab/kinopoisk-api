@@ -5,6 +5,7 @@ import { createAPI } from '../../../services/api';
 import { useGetOneFilmQuery } from '../../../services/query-api';
 import { FilmById, Person, SimilarMovie } from '../../../types/types';
 import { getPersonKey, getSyntheticRating } from '../../../utils/utils';
+import Stars from '../../stars/stars';
 
 
 // const api = createAPI();
@@ -95,10 +96,12 @@ export default function OneFilmPage(){
   // }
 
   // console.log(data);
-  // const {name, votes, year, rating, poster, description, countries, genres, persons, similarMovies} = data as FilmById;
+  // const {name, votes, year, rating, poster, description, countries, genres, persons, similarMovies, movieLength, id} = data as FilmById;
 
 
-  const {name, votes, year, rating, poster, description, countries, genres, persons, similarMovies} = FILM_BY_ID;
+  const {name, votes, year, rating, poster, description, countries, genres, persons, similarMovies, movieLength, id} = FILM_BY_ID;
+
+  const filmCard = {name, poster, rating, year, movieLength, votes, id, description};
 
   const countryList = countries ? countries.slice(0, countryNum).map((item) => <ItemLi item={item.name} key={item.name}/>) : null;
   const genreList = genres ? genres.slice(0, genreNum).map((item) => <ItemLi item={item.name} key={item.name}/>) : null;
@@ -133,6 +136,7 @@ export default function OneFilmPage(){
           </div>
           <div className="card-stacked">
             <div style={{padding: '1rem'}} className='blue-grey'>
+              <Stars filmCard={filmCard}/>
               <p className='blue-grey lighten-1'>Синтетический рейтинг: {ratingSynth} <i className="large grade material-icons" style={{fontSize: '1.1rem'}}>grade</i>
                 {forAudience
                   ?

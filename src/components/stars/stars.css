@@ -1,0 +1,15 @@
+.react-stars {
+  display: flex;
+  justify-content: space-evenly;
+  padding: 5px 0;
+}
+
+.react-star {
+  font-size: 0.8rem !important;
+  cursor: pointer;
+}
+
+
+.react-star--chosen {
+  color: orange;
+}

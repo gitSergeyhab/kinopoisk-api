@@ -1,0 +1,14 @@
+.react-header__logo{
+  margin-left: 3rem;
+  font-weight: bold;
+  color: orange;
+  border: 1px solid orange;
+  padding: 0.4rem;
+}
+
+.react-header__link {
+  color: white;
+}
+.react-header__link--active {
+  color: orange;
+}

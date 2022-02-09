@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
-import { OptionType } from '../types/types';
+import { FilmCardsData, OptionType } from '../types/types';
 
 export const enum ActionType {
   // SetOneFilm = 'film/SetOneFilm',
@@ -14,8 +14,9 @@ export const enum ActionType {
   SetCategory = 'filter/SetCategory',
   SetSortField = 'filter/SetSortField',
   SetSortType = 'filter/SetSortType',
-
   ResetFilter = 'filter/ResetFilter',
+
+  SetLocalDB = 'localDB/SetLocalDB',
 
 }
 
@@ -35,6 +36,8 @@ export const setSortType = createAction(ActionType.SetSortType, (category: strin
 
 
 export const resetFilter = createAction(ActionType.ResetFilter);
+
+export const setLocalDB = createAction(ActionType.SetLocalDB, (db: FilmCardsData | null) => ({payload: db}));
 
 // export const setOneFilm = createAction(ActionType.SetOneFilm, (film: FilmById) => ({payload: film}));
 // export const setOneFilmError = createAction(ActionType.SetOneFilmError, (status: boolean) => ({payload: status}));

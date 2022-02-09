@@ -1,0 +1,12 @@
+.react-card {
+  border: none;
+  cursor: grab;
+}
+
+.react-card--over {
+  border: 1px solid blue;
+}
+
+.react-card--start {
+  border: 1px solid green;
+}

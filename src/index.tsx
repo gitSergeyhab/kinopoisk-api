@@ -1,16 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/app/app';
-import { createAPI } from './services/api';
 
 import 'materialize-css';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
+import { setLocalDB } from './store/action';
+import { getFilmsDataFromStorage } from './utils/storage-utils';
 
-// const api = createAPI();
-
-// api.get('/character?name=/ga/i').then((res) => console.log(res)).catch((e) => console.log('error!!!', e));
-// api.get(`${URL_BY_ID}&token=${PUBLIC_TOKEN}`).then((res) => console.log(res)).catch((e) => console.log('error!!!', e));
+// загрузить БД из локал-стораж в редюсер  (при обнослении данных: в редюсере - компонент перерендеривается, в ЛС - нет)
+const storageDb = getFilmsDataFromStorage();
+store.dispatch(setLocalDB(storageDb));
 
 
 ReactDOM.render(

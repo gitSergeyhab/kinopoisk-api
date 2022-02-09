@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { getCategory, getEndRating, getEndYear, getSortField, getSortType, getStartRating, getStartYear, getVoteOption } from '../../store/filter-reducer/filter-reducer-selectors';
 import { getStringParam } from '../../utils/url-utils';
 import RatingsFilter from './rating-filter/rating-filter';
@@ -8,16 +8,23 @@ import VotesFilter from './votes-filter/votes-filter';
 import CategoriesFilter from './categories-filter/categories-filter';
 
 import './filter.css';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { resetFilter } from '../../store/action';
-import { Options } from '../../const';
-import { initState } from '../../store/filter-reducer/filter-reducer';
 
 
 export default function Filter() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const [reset, setReset] = useState(false);
+
+  useEffect(() => {
+    if (reset) {
+      dispatch(resetFilter());
+      setReset(false);
+    }
+  }, [reset, dispatch]);
 
   const startYear = useSelector(getStartYear);
   const endYear = useSelector(getEndYear);
@@ -32,23 +39,21 @@ export default function Filter() {
 
 
   const handleSearchClick = () => navigate(getStringParam({startRating, endRating, startYear, endYear, voteOption, category, sortField, sortType}));
+
+
   const handleResetClick = () => {
-    navigate(getStringParam({startRating, endRating, startYear, endYear, voteOption, category, sortField, sortType}));
-    navigate(getStringParam({...initState}));
+    navigate('');
     if (formRef) {
       formRef.current?.reset();
     }
-    setTimeout(() => dispatch(resetFilter()), 0);
+    setReset(true);
   };
-
-  const {search} = useLocation();
-  console.log(search);
-
 
   return(
     <form className="col s3 react-filter grey darken-4 white-text react-filter" ref={formRef}>
-      <YearsFilter/>
-      <RatingsFilter/>
+
+      <YearsFilter reset={reset}/>
+      <RatingsFilter reset={reset}/>
       <VotesFilter/>
       <CategoriesFilter/>
 

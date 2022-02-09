@@ -1,4 +1,3 @@
-import { useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { useSearchParams } from 'react-router-dom';
 import { TypeNumber } from '../../../const';
@@ -14,20 +13,13 @@ function CategoryBtn({category, checked} : {category: TypeBtn, checked: string} 
 
   const dispatch = useDispatch();
 
-  const ref = useRef<HTMLInputElement | null>(null);
-
-  const handleCategoryChange = () => {
-    dispatch(setCategory(value));
-    console.log('checked, value,', checked, value, checked === value);
-
-  };
+  const handleCategoryChange = () => dispatch(setCategory(value));
 
 
   return (
     <p className='left-align'>
       <label>
         <input
-          ref={ref}
           onChange={handleCategoryChange}
           name="categories" type="radio"
           value={value} defaultChecked={checked === value}
@@ -44,10 +36,8 @@ export default function CategoriesFilter () {
   const [searchParams] = useSearchParams();
 
   const checkedBtn = getCheckedBtn(searchParams);
-  console.log(checkedBtn);
 
   const buttons = Object.values(TypeNumber).map((item) => <CategoryBtn category={item} key={item.value} checked={checkedBtn}/>);
-
 
   return (
     <fieldset className='grey darken-3'>

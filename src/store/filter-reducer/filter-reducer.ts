@@ -4,7 +4,7 @@ import { OptionType } from '../../types/types';
 import { resetFilter, setCategory, setEndRating, setEndYear, setSortField, setSortType, setStartRating, setStartYear, setVoteOption } from '../action';
 
 
-type State = {
+export type FilterState = {
   startYear: number,
   endYear: number,
 
@@ -19,7 +19,7 @@ type State = {
   sortType: string,
 }
 
-export const initState: State = {
+export const initFilterState: FilterState = {
   startYear: FilterRange.Year.Start,
   endYear: FilterRange.Year.End,
   startRating: FilterRange.Rating.Start,
@@ -31,7 +31,7 @@ export const initState: State = {
 };
 
 
-export const filterReducer = createReducer(initState, (builder) => {
+export const filterReducer = createReducer(initFilterState, (builder) => {
   builder
     .addCase(setStartYear, (state, action) => {state.startYear = action.payload;})
     .addCase(setEndYear, (state, action) => {state.endYear = action.payload;})
@@ -44,13 +44,13 @@ export const filterReducer = createReducer(initState, (builder) => {
 
 
     .addCase(resetFilter, (state) => {
-      state.startYear = initState.startYear;
-      state.endYear = initState.endYear;
-      state.startRating = initState.startRating;
-      state.endRating = initState.endRating;
-      state.voteOption = initState.voteOption;
-      state.category = initState.category;
-      state.sortField = initState.sortField;
-      state.sortType = initState.sortType;
+      state.startYear = initFilterState.startYear;
+      state.endYear = initFilterState.endYear;
+      state.startRating = initFilterState.startRating;
+      state.endRating = initFilterState.endRating;
+      state.voteOption = initFilterState.voteOption;
+      state.category = initFilterState.category;
+      state.sortField = initFilterState.sortField;
+      state.sortType = initFilterState.sortType;
     });
 });
