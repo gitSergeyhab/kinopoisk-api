@@ -1,0 +1,22 @@
+.react-person-movies {
+  width: 100% !important;
+}
+
+.react-person-movies__item {
+  display: flex !important;
+  justify-content: space-between !important;
+}
+
+.react-person-movies__paragraph {
+  text-align: left !important;
+  width: 15%;
+
+}
+
+.react-person-movies__paragraph--title {
+  width: 40%;
+}
+
+.react-person-movies__paragraph--description {
+  width: 30%;
+}

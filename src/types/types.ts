@@ -99,9 +99,9 @@ type Premiere = {
 };
 
 type Fact = {
-  'value': string,
-  'type': string,
-  'spoiler': boolean
+  'value'?: string,
+  'type'?: string,
+  'spoiler'?: boolean
 };
 
 type Genre = {
@@ -193,6 +193,43 @@ export type FilmById = {
   'ticketsOnSale': boolean,
   'imagesInfo': ImagesInfo,
   'createDate': string | null,
+}
+
+export type MovieInPerson =       {
+  'id': number,
+  'name'?: string,
+  'alternativeName'?: string,
+  'rating'?: number,
+  'general'?: boolean,
+  'description'?: string,
+};
+
+type Profession = {
+  'value'?: string
+};
+
+type Place = {
+  'value'?: string
+};
+
+
+export type PersonById = {
+  'spouses'?: any,
+  'id': number,
+  'name'?: string,
+  'enName'?: string,
+  'photo'?: string,
+  'profession'?: Profession[],
+  'birthPlace'?: Place[],
+  'deathPlace'?: Place[],
+  'facts'?: Fact[],
+  'movies'?: MovieInPerson[],
+  'age'?: number,
+  'birthday'?: string,
+  'countAwards'?: number,
+  'death'?: any,
+  'growth'?: number,
+  'sex'?: string
 }
 
 

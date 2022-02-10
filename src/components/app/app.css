@@ -1,0 +1,11 @@
+html, body, .wrapper {
+  height: 100%;
+  }
+  body {
+    display: flex;
+    flex-direction: column;
+  }
+  footer {
+    align-self: flex-end;
+    width: 100%;
+  }

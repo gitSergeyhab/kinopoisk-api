@@ -1,4 +1,3 @@
-import Pagination from '../../../pagination/pagination';
 import FilmsList from '../../films-list/films-list';
 import Filter from '../../filter/filter';
 import TabsOrder from '../../tabs-order/tabs-order';

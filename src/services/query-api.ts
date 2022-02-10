@@ -1,6 +1,7 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
+import { APIRoute } from '../const';
 import { FilmSearchParam } from '../types/types';
-import { convertSearchForServer, getUrlByFilmID, getUrlFilmsByParams } from '../utils/url-utils';
+import { convertSearchForServer, getUrlByRoutId, getUrlFilmsByParams } from '../utils/url-utils';
 
 
 export const BASE_URL_KP = 'https://api.kinopoisk.dev';
@@ -13,7 +14,11 @@ export const queryApi = createApi({
   }),
   endpoints: (build) => ({
     getOneFilm: build.query({
-      query: (id) => getUrlByFilmID(id),
+      query: (id) => getUrlByRoutId(APIRoute.Films, id),
+    }),
+
+    getOnePerson: build.query ({
+      query: (id) => getUrlByRoutId(APIRoute.Persons, id),
     }),
 
 
@@ -24,6 +29,6 @@ export const queryApi = createApi({
   }),
 });
 
-export const {useGetOneFilmQuery, useGetFilmsByParamsQuery} = queryApi;
+export const {useGetOneFilmQuery, useGetOnePersonQuery, useGetFilmsByParamsQuery} = queryApi;
 
 //ERVKSC2-VC14SN0-MMBQXZ9-Q29R7HV

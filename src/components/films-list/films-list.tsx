@@ -4,6 +4,8 @@ import Pagination from '../../pagination/pagination';
 import { useGetFilmsByParamsQuery } from '../../services/query-api';
 import { Film } from '../../types/types';
 import { FilmCard } from '../film-card/film-card';
+import LoadingLocal from '../loading-local/loading-local';
+import Loading from '../loading/loading';
 
 
 export default function FilmsList() {
@@ -15,8 +17,13 @@ export default function FilmsList() {
   const {isError, isFetching, isLoading, data} = useGetFilmsByParamsQuery(search);
 
 
-  if (isLoading) {
-    return <h2>isFetching</h2>;
+  // if (isLoading) {
+  //   console.log('LoadingLocal')
+  //   return <LoadingLocal/>;
+  // }
+
+  if (isFetching) {
+    <Loading/>;
   }
 
   if (isError || !data) {
@@ -24,10 +31,6 @@ export default function FilmsList() {
   }
 
   const films = data.docs as Film[];
-
-
-  // const films = FILMS;
-  // console.log(films);
 
 
   const filmList = films.map((item) => (

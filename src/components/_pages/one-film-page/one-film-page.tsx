@@ -5,6 +5,7 @@ import { createAPI } from '../../../services/api';
 import { useGetOneFilmQuery } from '../../../services/query-api';
 import { FilmById, Person, SimilarMovie } from '../../../types/types';
 import { getPersonKey, getSyntheticRating } from '../../../utils/utils';
+import Loading from '../../loading/loading';
 import Stars from '../../stars/stars';
 
 
@@ -83,25 +84,22 @@ export default function OneFilmPage(){
   const handleShowGenreClick = () => setGenreNum(Infinity);
   const handleHideGenreClick = () => setGenreNum(StartValue.Genre);
 
-  // const {id} = useParams();
+  const {id} = useParams();
 
-  // const {data, isError, isFetching} = useGetOneFilmQuery(id);
+  const {data, isError, isFetching} = useGetOneFilmQuery(id);
 
-  // if (isFetching) {
-  //   return <h2>Loading</h2>;
-  // }
+  if (isFetching) {
+    return <Loading/>;
+  }
 
-  // if (isError || !data) {
-  //   return <h2>isError</h2>;
-  // }
+  if (isError || !data) {
+    return <h2>isError</h2>;
+  }
 
-  // console.log(data);
-  // const {name, votes, year, rating, poster, description, countries, genres, persons, similarMovies, movieLength, id} = data as FilmById;
+  const {name, votes, year, rating, poster, description, countries, genres, persons, similarMovies, movieLength} = data as FilmById;
 
 
-  const {name, votes, year, rating, poster, description, countries, genres, persons, similarMovies, movieLength, id} = FILM_BY_ID;
-
-  const filmCard = {name, poster, rating, year, movieLength, votes, id, description};
+  const filmCard = {name, poster, rating, year, movieLength, votes, id: data.id, description};
 
   const countryList = countries ? countries.slice(0, countryNum).map((item) => <ItemLi item={item.name} key={item.name}/>) : null;
   const genreList = genres ? genres.slice(0, genreNum).map((item) => <ItemLi item={item.name} key={item.name}/>) : null;

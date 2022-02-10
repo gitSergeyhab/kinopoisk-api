@@ -9,7 +9,7 @@ const TOO_MANY_VOTES = 999999999;
 
 // api.get(`${URL_BY_ID}&token=${PUBLIC_TOKEN}`).then((res) => console.log(res)).catch((e) => console.log('error!!!', e));
 
-export const getUrlByFilmID = (id: string) => `/movie?search=${id}&field=id&token=${TOKEN}`;
+export const getUrlByRoutId = (rout: string, id: string) => `${rout}?search=${id}&field=id&token=${TOKEN}`;
 
 export const getUrlFilmsByParams = ({filter, sort, filterParam, sortType} : FilmSearchParam) =>
   `/movie?field=${filter}&search=${filterParam}&sortField=${sort}&sortType=${sortType}&token=${TOKEN}`;

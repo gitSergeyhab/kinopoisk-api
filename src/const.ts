@@ -1,5 +1,6 @@
 export const enum APIRoute {
   Films = '/movie',
+  Persons = '/person'
 }
 
 export const Field = {
