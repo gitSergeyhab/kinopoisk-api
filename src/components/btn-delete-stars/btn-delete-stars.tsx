@@ -1,9 +1,10 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { setLocalDB } from '../../store/action';
 import { getDb } from '../../store/local-db-reducer/local-db-reducer-selectors';
-import { deleteRatingFromDBByID, deleteRatingFromStorageByID, getStarsFromDBByID, getStarsFromStorageByID, writeFilmDBtoStorage } from '../../utils/storage-utils';
+import { deleteRatingFromDBByID, getStarsFromDBByID, writeFilmDBtoStorage } from '../../utils/storage-utils';
 
 import './btn-delete-stars.css';
+
 
 export default function BtnDeleteStars({id} : {id: string | number}) {
 
@@ -22,9 +23,7 @@ export default function BtnDeleteStars({id} : {id: string | number}) {
 
   const handleDeleteClick = () => {
     if (starsFromBD) {
-      // console.log(db);
       const newData = deleteRatingFromDBByID(db, id);
-      // console.log(newData);
       writeFilmDBtoStorage(newData);
       dispatch(setLocalDB(newData));
     }

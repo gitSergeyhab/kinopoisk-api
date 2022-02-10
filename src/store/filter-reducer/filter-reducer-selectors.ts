@@ -1,5 +1,6 @@
 import { State } from '../../types/types';
 import { ReducerNames } from '../store';
+import { FilterState } from './filter-reducer';
 
 const field = ReducerNames.Filter;
 
@@ -17,3 +18,4 @@ export const getSortField = (state: State) => state[field].sortField;
 export const getSortType = (state: State) => state[field].sortType;
 
 
+export const getFilter = (state: State): FilterState => state[field];

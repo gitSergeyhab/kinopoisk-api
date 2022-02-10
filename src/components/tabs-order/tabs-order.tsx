@@ -4,20 +4,13 @@ import { ORDER_CATEGORIES } from '../../const';
 import { setSortType } from '../../store/action';
 import { TypeBtn } from '../../types/types';
 import { getSortingType, getStringParam } from '../../utils/url-utils';
-import { getCategory, getEndRating, getEndYear, getSortField, getStartRating, getStartYear, getVoteOption } from '../../store/filter-reducer/filter-reducer-selectors';
+import { getFilter } from '../../store/filter-reducer/filter-reducer-selectors';
 
 import './tab-order.css';
 
 function SortTab({sort, checkedBtn} : {sort: TypeBtn, checkedBtn: string}) {
 
-
-  const startYear = useSelector(getStartYear);
-  const endYear = useSelector(getEndYear);
-  const startRating = useSelector(getStartRating);
-  const endRating = useSelector(getEndRating);
-  const voteOption = useSelector(getVoteOption);
-  const category = useSelector(getCategory);
-  const sortField = useSelector(getSortField);
+  const filter = useSelector(getFilter);
 
   const {name, value} = sort;
 
@@ -25,10 +18,10 @@ function SortTab({sort, checkedBtn} : {sort: TypeBtn, checkedBtn: string}) {
 
   const navigate = useNavigate();
 
-
   const handleTabClick = () => {
     dispatch(setSortType(value));
-    navigate(getStringParam({startRating, endRating, startYear, endYear, voteOption, category, sortField, sortType: value}));
+    const sortFilter = {...filter, sortType: value};
+    navigate(getStringParam(sortFilter));
   };
 
   return (

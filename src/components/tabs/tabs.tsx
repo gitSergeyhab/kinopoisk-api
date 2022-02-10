@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { setSortField } from '../../store/action';
 import { TypeBtn } from '../../types/types';
 import { getSortingField, getStringParam } from '../../utils/url-utils';
-import { getCategory, getEndRating, getEndYear, getSortType, getStartRating, getStartYear, getVoteOption } from '../../store/filter-reducer/filter-reducer-selectors';
+import { getFilter } from '../../store/filter-reducer/filter-reducer-selectors';
 
 import './tab.css';
 import { SORT_CATEGORIES } from '../../const';
@@ -11,13 +11,7 @@ import { SORT_CATEGORIES } from '../../const';
 
 function SortTab({sort, checkedBtn} : {sort: TypeBtn, checkedBtn: string}) {
 
-  const startYear = useSelector(getStartYear);
-  const endYear = useSelector(getEndYear);
-  const startRating = useSelector(getStartRating);
-  const endRating = useSelector(getEndRating);
-  const voteOption = useSelector(getVoteOption);
-  const category = useSelector(getCategory);
-  const sortType = useSelector(getSortType);
+  const filter = useSelector(getFilter);
 
   const {name, value} = sort;
 
@@ -28,7 +22,8 @@ function SortTab({sort, checkedBtn} : {sort: TypeBtn, checkedBtn: string}) {
 
   const handleTabClick = () => {
     dispatch(setSortField(value));
-    navigate(getStringParam({startRating, endRating, startYear, endYear, voteOption, category, sortField: value, sortType}));
+    const sortFilter = {...filter, sortField: value};
+    navigate(getStringParam(sortFilter));
   };
 
   return (

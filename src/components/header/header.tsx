@@ -17,12 +17,32 @@ export default function Header() {
   return (
     <nav style={{marginBottom: '1rem'}}>
       <div className="nav-wrapper grey darken-4 white-text">
-        <Link to={AppRoute.Films} className='react-header__logo' onClick={handleLinkClick}>Kinopoisk-API</Link>
+        <Link
+          to={AppRoute.Films}
+          className='react-header__logo'
+          onClick={handleLinkClick}
+        >Kinopoisk-API
+        </Link>
 
         <ul className="right hide-on-med-and-down">
+          <li>
+            <Link
+              to={AppRoute.Films}
+              className={pathname === AppRoute.Films ? ACTIVE_LINK_CLASS : ''}
+              onClick={handleLinkClick}
+            >Главная
+            </Link>
+          </li>
 
-          <li><Link to={AppRoute.Films} className={pathname === AppRoute.Films ? ACTIVE_LINK_CLASS : ''} onClick={handleLinkClick}>Главная</Link></li>
-          <li><Link to={AppRoute.Watched} className={pathname === AppRoute.Watched ? ACTIVE_LINK_CLASS : ''} onClick={handleLinkClick}>Просмотренные фильмы</Link></li>
+          <li>
+            <Link
+              to={AppRoute.Watched}
+              className={pathname === AppRoute.Watched ? ACTIVE_LINK_CLASS : ''}
+              onClick={handleLinkClick}
+            >
+              Просмотренные фильмы
+            </Link>
+          </li>
         </ul>
       </div>
     </nav>

@@ -1,18 +1,16 @@
-import { FilmCard, FilmCardData, FilmCardsData } from '../types/types';
+import { FilmCard, FilmCardsData } from '../types/types';
 
 const KP_FILM_CARD_KEY = 'KP_FILM_CARD_KEY';
 
 
 export const getNextOrder = (filmCards: FilmCardsData) => {
   if (!filmCards || !Object.values(filmCards).length) {
-    console.log('!filmCards');
     return 1;
   }
 
   const copyDataObj = {...filmCards};
   const copyData = Object.values(copyDataObj).sort((prev, next) => prev.order - next.order);
   const x = copyData[copyData.length - 1].order + 1;
-  console.log(x);
   return x;
 };
 
@@ -83,4 +81,54 @@ export const deleteRatingFromStorageByID = (id: number | string) => {
   const db = getFilmsDataFromStorage() || {};
   const newData = deleteRatingFromDBByID(db, id);
   writeFilmDBtoStorage(newData);
+};
+
+
+const getNewOrder = (now: number, start: number, drop: number) => {
+  if (start === drop) {
+    return now;
+  }
+
+  if (now === start) {
+    return drop;
+  }
+
+  if (start < drop) {
+    if (now < start || now > drop) {
+      return now;
+    }
+
+    if (now <= drop) {
+      return now - 1;
+    }
+  }
+
+  if (start > drop) {
+    if (now > start || now < drop) {
+      return now;
+    }
+
+    if (now >= drop) {
+      return now + 1;
+    }
+  }
+  return now;
+};
+
+export const rebaseOrdersInDB = (startDB: FilmCardsData | null, start: number | null, drop: number | null) => {
+  if (!startDB || !Object.values(startDB).length || start === null || drop === null) {
+    return null;
+  }
+
+  if (start === drop) {
+    return startDB;
+  }
+
+  const db = Object.values({...startDB});
+
+  const newDBArray = db.map((item) => ({...item, order: getNewOrder(item.order, start, drop)}));
+
+  const newDB = newDBArray.reduce((acc, item) => ({...acc, [item.filmCard.id]: item}), {});
+
+  return newDB;
 };

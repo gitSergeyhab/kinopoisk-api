@@ -2,66 +2,18 @@ import { DragEvent, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setLocalDB } from '../../../store/action';
 import { getDb } from '../../../store/local-db-reducer/local-db-reducer-selectors';
-import { FilmCardData, FilmCardsData } from '../../../types/types';
-import { writeFilmDBtoStorage } from '../../../utils/storage-utils';
+import { FilmCardData } from '../../../types/types';
+import { rebaseOrdersInDB, writeFilmDBtoStorage } from '../../../utils/storage-utils';
 import { FilmCard } from '../../film-card/film-card';
 
 import './watched-films.css';
+
 
 const DragClass = {
   Start: 'react-card--start',
   Over: 'react-card--over',
 };
 
-const getNewOrder = (now: number, start: number, drop: number) => {
-  if (start === drop) {
-    return now;
-  }
-
-  if (now === start) {
-    return drop;
-  }
-
-  if (start < drop) {
-    if (now < start || now > drop) {
-      return now;
-    }
-
-    if (now <= drop) {
-      return now - 1;
-    }
-  }
-
-  if (start > drop) {
-    if (now > start || now < drop) {
-      return now;
-    }
-
-    if (now >= drop) {
-      return now + 1;
-    }
-  }
-  return now;
-};
-
-const rebaseOrdersInDB = (startDB: FilmCardsData | null, start: number | null, drop: number | null) => {
-  if (!startDB || !Object.values(startDB).length || start === null || drop === null) {
-    return null;
-  }
-
-  if (start === drop) {
-    return startDB;
-  }
-
-  const db = Object.values({...startDB});
-  // db.sort((prev, next) => prev.order - next.order);
-
-  const newDBArray = db.map((item) => ({...item, order: getNewOrder(item.order, start, drop)}));
-
-  const newDB = newDBArray.reduce((acc, item) => ({...acc, [item.filmCard.id]: item}), {});
-
-  return newDB;
-};
 
 type DragFilmCardType = {filmCardData: FilmCardData, start: number | null, setStart: () => void}
 
@@ -159,7 +111,10 @@ export default function WatchedFilms () {
       <div className="col s10 brown darken-3 text-lighten-4">
         <h2 className="header center-align orange-text">Оцененныые фильмы</h2>
         <p className='white-text center-align'>Можно менять положение карточек перетаскиванием</p>
-        <p className='white-text center-align'>(D-N-D реализован без использования доп библиотек, данные хранятся в localStorage - Kinopoisk-API нет возможности сохранять оценки на сервере)</p>
+        <p className='white-text center-align'>
+          (D-N-D реализован без использования доп библиотек,
+          данные хранятся в localStorage - Kinopoisk-API нет возможности сохранять оценки на сервере)
+        </p>
         <div style={{display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap'}}>
 
           {filmCardsList}

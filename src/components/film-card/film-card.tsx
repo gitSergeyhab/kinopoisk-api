@@ -22,8 +22,13 @@ export function FilmCard({film} : {film: Film | FilmCardType}) {
         </div>
       </Link>
       <div className="card-content">
-        <span className="card-title activator grey-text text-darken-4"><Link to={`/films/${id}`}>{name}</Link><i className="material-icons right">more_vert</i></span>
-        <p>Pейтинг:  {getSyntheticRating(rating, votes).ratingSynth} <i className="large grade material-icons" style={{fontSize: '1.1rem'}}>grade</i> ({votes.kp})</p>
+        <span className="card-title activator grey-text text-darken-4">
+          <Link to={`/films/${id}`}>{name}</Link>
+          <i className="material-icons right">more_vert</i>
+        </span>
+        <p>Pейтинг:  {getSyntheticRating(rating, votes).ratingSynth}
+          <i className="large grade material-icons" style={{fontSize: '1.1rem'}}>grade</i> ({votes.kp})
+        </p>
 
       </div>
       <div className="card-reveal">

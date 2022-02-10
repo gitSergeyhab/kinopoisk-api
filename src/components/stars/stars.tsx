@@ -3,13 +3,21 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setLocalDB } from '../../store/action';
 import { getDb } from '../../store/local-db-reducer/local-db-reducer-selectors';
 import { FilmCard } from '../../types/types';
-import { addFilmToDB, addFilmToStorage, getStarsFromDBByID, getStarsFromStorageByID, writeFilmDBtoStorage } from '../../utils/storage-utils';
+import { addFilmToDB, getStarsFromDBByID, writeFilmDBtoStorage } from '../../utils/storage-utils';
 import './stars.css';
 
 export const STAR_NUM = 10;
-type Void = () => void;
 
-type StarType = {filmId: string, star: number, focused: number, checked: number, onChange: Void, onMouseEnter: Void, onMouseLeave: Void}
+type Void = () => void;
+type StarType = {
+  filmId: string,
+  star: number,
+  focused: number,
+  checked: number,
+  onChange: Void,
+  onMouseEnter: Void,
+  onMouseLeave: Void
+}
 
 function Star({filmId, star, focused, checked, onChange, onMouseEnter, onMouseLeave} : StarType) {
 
@@ -59,7 +67,7 @@ export default function Stars({filmCard} : {filmCard : FilmCard}) {
     writeFilmDBtoStorage(newDB);
   };
 
-  // [1,2,3,4,5,6,7,8,9,10].map(...)
+
   const starList = new Array(STAR_NUM).fill(null).map((_, index) => index + 1).map((star) =>
     (
       <Star

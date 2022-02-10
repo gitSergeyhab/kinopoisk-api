@@ -1,5 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import { FILMS } from '../../mock/mock';
+import Pagination from '../../pagination/pagination';
 import { useGetFilmsByParamsQuery } from '../../services/query-api';
 import { Film } from '../../types/types';
 import { FilmCard } from '../film-card/film-card';
@@ -24,7 +25,6 @@ export default function FilmsList() {
 
   const films = data.docs as Film[];
 
-  console.log(data);
 
   // const films = FILMS;
   // console.log(films);
@@ -41,6 +41,8 @@ export default function FilmsList() {
     <div style={{display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap'}}>
 
       {filmList}
+
+      <Pagination currentPage={data.page} pages={data.pages}/>
 
     </div>);
 }

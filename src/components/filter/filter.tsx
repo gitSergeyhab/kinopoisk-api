@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { getCategory, getEndRating, getEndYear, getSortField, getSortType, getStartRating, getStartYear, getVoteOption } from '../../store/filter-reducer/filter-reducer-selectors';
+import { getFilter } from '../../store/filter-reducer/filter-reducer-selectors';
 import { getStringParam } from '../../utils/url-utils';
 import RatingsFilter from './rating-filter/rating-filter';
 import YearsFilter from './years-filter/years-filter';
@@ -26,26 +26,17 @@ export default function Filter() {
     }
   }, [reset, dispatch]);
 
-  const startYear = useSelector(getStartYear);
-  const endYear = useSelector(getEndYear);
-  const startRating = useSelector(getStartRating);
-  const endRating = useSelector(getEndRating);
-  const voteOption = useSelector(getVoteOption);
-  const category = useSelector(getCategory);
-  const sortField = useSelector(getSortField);
-  const sortType = useSelector(getSortType);
+  const filter = useSelector(getFilter);
 
   const formRef = useRef<null | HTMLFormElement>(null);
 
 
-  const handleSearchClick = () => navigate(getStringParam({startRating, endRating, startYear, endYear, voteOption, category, sortField, sortType}));
+  const handleSearchClick = () =>
+    navigate(getStringParam(filter));
 
 
   const handleResetClick = () => {
     navigate('');
-    if (formRef) {
-      formRef.current?.reset();
-    }
     setReset(true);
   };
 
@@ -55,17 +46,19 @@ export default function Filter() {
       <YearsFilter reset={reset}/>
       <RatingsFilter reset={reset}/>
       <VotesFilter/>
-      <CategoriesFilter/>
+      <CategoriesFilter reset={reset}/>
 
       <button
         onClick={handleSearchClick}
-        className='btn black orange-text' type='button'
+        className='btn black orange-text'
+        type='button'
         style={{marginBottom: '20px'}}
       >Искать
       </button>
       <button
         onClick={handleResetClick}
-        className='btn black red-text' type='button'
+        className='btn black red-text'
+        type='button'
         style={{marginBottom: '20px'}}
       >Сбросить
       </button>
