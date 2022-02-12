@@ -44,6 +44,8 @@ export const convertSearchForServer = (search: string) => {
   return `/movie${search}&limit=12&token=${TOKEN}`;
 };
 
+export const convertFilmNameForServer = (search: string) => `/movie?sortField=${Field.Votes.Kp}&sortType=${-1}&limit=5&search=${search}&field=name&isStrict=false&token=${TOKEN}`;
+
 
 export const getParamsFromSearch = (searchParams: URLSearchParams, needField: string, defaultStart: number, defaultEnd: number) => {
   const fields = searchParams.getAll('field');

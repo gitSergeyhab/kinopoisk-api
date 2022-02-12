@@ -1,11 +1,8 @@
-html, body, .wrapper {
-  height: 100%;
-  }
-  body {
-    display: flex;
-    flex-direction: column;
-  }
-  footer {
-    align-self: flex-end;
-    width: 100%;
-  }
+.react-one-page {
+  display: flex;
+  justify-content: center;
+}
+
+.react-one-page__wrapper {
+  width: 80%;
+}

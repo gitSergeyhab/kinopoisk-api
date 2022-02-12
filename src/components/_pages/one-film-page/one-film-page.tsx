@@ -148,9 +148,8 @@ export default function OneFilmPage(){
 
 
   return (
-    <div className="row black">
-      <div className="col s1"></div>
-      <div className="col s10 brown darken-3 white-text text-lighten-4">
+    <div className="black react-one-page">
+      <div className="brown darken-3 white-text text-lighten-4 react-one-page__wrapper">
         <h2 className="header center-align">{name}</h2>
         <div className="card horizontal blue-grey darken-1 black-text">
           <div className="card-image">
