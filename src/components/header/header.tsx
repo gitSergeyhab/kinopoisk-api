@@ -2,6 +2,7 @@ import { useDispatch } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import { resetFilter } from '../../store/action';
 import { AppRoute } from '../app/app';
+import Search from '../search/search';
 
 import './header.css';
 
@@ -24,7 +25,9 @@ export default function Header() {
         >Kinopoisk-API
         </Link>
 
+
         <ul className="right hide-on-med-and-down">
+          <li><Search/></li>
           <li>
             <Link
               to={AppRoute.Films}

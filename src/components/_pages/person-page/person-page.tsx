@@ -4,7 +4,7 @@ import { useGetOnePersonQuery } from '../../../services/query-api';
 import { MovieInPerson,  PersonById } from '../../../types/types';
 import { formatDateDDMonthYYYY } from '../../../utils/date-utils';
 import Loading from '../../loading/loading';
-
+import PersonFilmList from '../../person-film-list/person-film-list';
 
 import './person-page.css';
 
@@ -18,27 +18,28 @@ const filterMovie = (movies: MovieInPerson[] | undefined) => {
   return newMovies as MovieInPerson[];
 };
 
-function PersonFilm({movie} : {movie: MovieInPerson}) {
+// function PersonFilm({movie} : {movie: MovieInPerson}) {
 
-  const {id, description, name, rating} = movie;
+//   const {id, description, name, rating} = movie;
 
-  return (
-    <li className="collection-item grey darken-3 react-person-movies__item">
-      <p className="title react-person-movies__paragraph react-person-movies__paragraph--title">
-        {name || 'Нет названия'}
-      </p>
-      <p className="react-person-movies__paragraph react-person-movies__paragraph--description">
-        {description || 'Нет описания'}
-      </p>
-      <p className="react-person-movies__paragraph">
-        {rating} <i className="material-icons">star_border</i>
-      </p>
+//   return (
+//     <li className="collection-item grey darken-3 react-person-movies__item">
+//       <p className="title react-person-movies__paragraph react-person-movies__paragraph--title">
+//         {name || 'Нет названия'}
+//       </p>
+//       <p className="react-person-movies__paragraph react-person-movies__paragraph--description">
+//         {description || 'Нет описания'}
+//       </p>
+//       <p className="react-person-movies__paragraph">
+//         {rating} <i className="material-icons">star_border</i>
+//       </p>
 
-      <Link to={`/films/${id}`} className="secondary-content">Перейти
-      </Link>
-    </li>
-  );
-}
+//       <Link to={`/films/${id}`} className="secondary-content">
+//         Перейти
+//       </Link>
+//     </li>
+//   );
+// }
 
 export default function PersonPage(){
 
@@ -56,7 +57,6 @@ export default function PersonPage(){
   }
 
   const {name, birthPlace, birthday, death, movies, photo, profession, sex, age} = data as PersonById;
-  console.log(data);
 
   const birthdayString = birthday ? formatDateDDMonthYYYY(birthday) : 'Неизвестна';
   const deathString = death ? formatDateDDMonthYYYY(death) : null;
@@ -68,10 +68,7 @@ export default function PersonPage(){
 
   const filteredMovies = filterMovie(movies);
 
-  const movieList = filteredMovies && filteredMovies.length ?
-    filteredMovies
-      .map((item) => <PersonFilm key={`${item.id}-${item.description || ''}`} movie={item}/>) : null;
-
+  const movieList = filteredMovies && filteredMovies.length ? <PersonFilmList movies={filteredMovies}/> : null;
 
   const birthPlaceList = birthPlace && birthPlace.length ?
     birthPlace

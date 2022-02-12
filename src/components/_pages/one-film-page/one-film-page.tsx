@@ -1,12 +1,17 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { FILM_BY_ID } from '../../../mock/mock';
 import { createAPI } from '../../../services/api';
 import { useGetOneFilmQuery } from '../../../services/query-api';
+import { setPersonsPopup } from '../../../store/action';
+import { getPersonsPopupStatus } from '../../../store/popup-reducer/popup-reducer-selectos';
 import { FilmById, Person, SimilarMovie } from '../../../types/types';
 import { getPersonKey, getSyntheticRating } from '../../../utils/utils';
 import Loading from '../../loading/loading';
 import Stars from '../../stars/stars';
+
+import ModalMoviePersons from '../../_modals/modal-movie-persons/modal-movie-persons';
 
 
 // const api = createAPI();
@@ -32,7 +37,7 @@ function PersonLi({person} : {person: Person}) {
       <div className="card-image">
         {photo ? <Link to={`/persons/${id}`}> <img className='center' style={{width: '5rem'}} src={photo} alt={name}/> </Link>: null}
       </div>
-      <Link to={`/person/${id}`}>{name}</Link>
+      <Link to={`/persons/${id}`}>{name}</Link>
       <p><b>{enProfession}</b></p>
       <p><b>{description}</b></p>
     </div>
@@ -77,6 +82,9 @@ export default function OneFilmPage(){
   const [genreNum, setGenreNum] = useState(StartValue.Genre);
   const [similarNum, setSimilarNum] = useState(StartValue.Similar);
 
+  const dispatch = useDispatch();
+  const isPersonsPopup = useSelector(getPersonsPopupStatus);
+
   const handleMoreSimilarClick = () => setSimilarNum((num) => num + StartValue.Similar);
   const handleHideSimilarClick = () => setSimilarNum(StartValue.Similar);
   const handleShowCountryClick = () => setCountryNum(Infinity);
@@ -86,13 +94,25 @@ export default function OneFilmPage(){
 
   const {id} = useParams();
 
-  const {data, isError, isFetching} = useGetOneFilmQuery(id);
+  const {data, isError, isLoading, isFetching} = useGetOneFilmQuery(id);
+  // console.log(data);
+
+  if (isLoading) {
+    console.log('loading');
+  }
 
   if (isFetching) {
+    console.log('loading');
+
     return <Loading/>;
   }
 
+
   if (isError || !data) {
+    console.log('isError');
+    if(isError) {console.log('isError!!!');}
+    if(!data) {console.log('!data!!!');}
+
     return <h2>isError</h2>;
   }
 
@@ -121,6 +141,10 @@ export default function OneFilmPage(){
   const btnCountry = countries && (countryNum < countries.length) ? btnOpenCountries : btnCloseCountries;
   const btnGenre = genres && (genreNum < genres.length) ? btnOpenGenres : btnCloseGenres;
   const btnSimilar = similarMovies && (similarNum < similarMovies.length) ? btnOpenSimilar : btnCloseSimilar;
+
+  const handleOpenAllPersonBtnClick = () => dispatch(setPersonsPopup(true));
+
+  const personsPopup = isPersonsPopup ? <ModalMoviePersons persons={persons}/> : null;
 
 
   return (
@@ -199,10 +223,14 @@ export default function OneFilmPage(){
                 {personList}
 
               </div>
-
-              <button className="btn waves-effect waves-light" type="button" name="action">Открыть всех
+              <button
+                onClick={handleOpenAllPersonBtnClick}
+                type='button' className="waves-effect waves-light btn modal-trigger"
+              >
+                Открыть всех
                 <i className="material-icons right">open_in_new</i>
               </button>
+
             </div>
 
 
@@ -229,6 +257,8 @@ export default function OneFilmPage(){
 
 
       </div>
+
+      {personsPopup}
     </div>
   );
 }

@@ -3,9 +3,11 @@ import './loading-local.css';
 export default function LoadingLocal() {
   return (
     <div className="react-loader-local">
-      <h2 className="header center-align">База данных слишком большая ...</h2>
-      <h2 className="header center-align">Кинопоиск АПИ устал...</h2>
-      <h2 className="header center-align">Но он старается..</h2>
+      <p className="header center-align">
+      База данных слишком большая ... <br/>
+      Кинопоиск АПИ устал...<br/>
+      Но он старается...
+      </p>
 
 
       <div className="react-loader">

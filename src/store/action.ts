@@ -18,6 +18,8 @@ export const enum ActionType {
 
   SetLocalDB = 'localDB/SetLocalDB',
 
+  SetPersonsPopup = 'popup/SetPersonsPopup'
+
 }
 
 export const setStartYear = createAction(ActionType.SetStartYear, (year: number) => ({payload: year}));
@@ -38,6 +40,8 @@ export const setSortType = createAction(ActionType.SetSortType, (category: strin
 export const resetFilter = createAction(ActionType.ResetFilter);
 
 export const setLocalDB = createAction(ActionType.SetLocalDB, (db: FilmCardsData | null) => ({payload: db}));
+
+export const setPersonsPopup = createAction(ActionType.SetPersonsPopup, (status: boolean) => ({payload: status}));
 
 // export const setOneFilm = createAction(ActionType.SetOneFilm, (film: FilmById) => ({payload: film}));
 // export const setOneFilmError = createAction(ActionType.SetOneFilmError, (status: boolean) => ({payload: status}));

@@ -1,5 +1,11 @@
 .react-loader-local {
+  background-color: black;
+  color: white;
   position: fixed;
-  top: 10%;
-  right: 10%;
+  top: 1rem;
+  right: 3rem;
+  z-index: 3;
+  font-weight: 800;
+  padding: 0;
+  opacity: 0.5;
 }

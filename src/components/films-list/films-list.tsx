@@ -17,16 +17,13 @@ export default function FilmsList() {
   const {isError, isFetching, isLoading, data} = useGetFilmsByParamsQuery(search);
 
 
-  // if (isLoading) {
-  //   console.log('LoadingLocal')
-  //   return <LoadingLocal/>;
-  // }
-
-  if (isFetching) {
-    <Loading/>;
+  if (isLoading) {
+    return <Loading/>;
   }
 
   if (isError || !data) {
+    console.log('isError');
+
     return <h2>isError</h2>;
   }
 
@@ -42,6 +39,7 @@ export default function FilmsList() {
 
   return (
     <div style={{display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap'}}>
+      {isFetching ? <LoadingLocal/> : null}
 
       {filmList}
 
