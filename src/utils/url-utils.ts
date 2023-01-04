@@ -1,18 +1,66 @@
-import { Field, Options, SORT_CATEGORIES } from '../const';
-import { TOKEN } from '../secret-const';
-import { FilmSearchParam, OptionType } from '../types/types';
-
-const TOO_MANY_VOTES = 999999999;
+import { Field, FieldType, FilterRange, SORT_CATEGORIES, TOO_MANY_VOTES } from '../const';
+import { OptionType, SimpleDict } from '../types/types';
 
 
-// api.get('/character?name=/ga/i').then((res) => console.log(res)).catch((e) => console.log('error!!!', e));
+const TOKEN = process.env.REACT_APP_KP_TOKEN;
 
-// api.get(`${URL_BY_ID}&token=${PUBLIC_TOKEN}`).then((res) => console.log(res)).catch((e) => console.log('error!!!', e));
+
+const createFilterField = (key: string, value: string) => `field=${key}&search=${value}`;
+
+
+const getSearchFromDict = (dict: {[key: string] : string | null}) => {
+  const array: string[] = [];
+
+  const filterFields = [FieldType.Rating, FieldType.TypeNum, FieldType.Votes, FieldType.Year] as string[];
+
+  for (const [key, value] of Object.entries(dict)){
+    if (!value) {continue;}
+    if (filterFields.includes(key)) {
+      array.push(createFilterField(key, value));
+    } else {
+      array.push(`${key}=${value}`);
+    }
+  }
+
+  return `?${array.join('&')}`;
+};
+
+export const getFullDict = (sp: URLSearchParams) => {
+  const fields = sp.getAll('field');
+  const search = sp.getAll('search');
+  const searchFields = fields.map((item, i) => ([item, search[i]]));
+  const searchDict = searchFields.reduce((acc, item) => ({...acc, [item[0]]: item[1]}), {});
+  const sortField = sp.get(FieldType.SortField);
+  const sortType = sp.get(FieldType.SortType);
+  const page = sp.get(FieldType.Page);
+  const fullDict = {...searchDict, [FieldType.SortType]: sortType, [FieldType.SortField]: sortField, [FieldType.Page]: page};
+
+  return fullDict as SimpleDict;
+};
+
+type ChangeField = {field: string; value: string | null, noChange?: boolean}
+
+type RewriteSearchArgs = {searchParams: URLSearchParams, fields: ChangeField[]}
+
+export const rewriteSearch = ({searchParams, fields}: RewriteSearchArgs) => {
+
+  const fullDict = getFullDict(searchParams);
+
+  const dict: {[key: string] : string} = { ...fullDict };
+
+  fields.forEach(({field, value, noChange}) => {
+    if (!noChange || !dict[field]) {
+      dict[field] = value ? value : '';
+    }
+
+  });
+
+  return getSearchFromDict(dict);
+};
+
 
 export const getUrlByRoutId = (rout: string, id: string) => `${rout}?search=${id}&field=id&token=${TOKEN}`;
 
-export const getUrlFilmsByParams = ({filter, sort, filterParam, sortType} : FilmSearchParam) =>
-  `/movie?field=${filter}&search=${filterParam}&sortField=${sort}&sortType=${sortType}&token=${TOKEN}`;
 
 type TypeParam = {startRating: number, endRating: number, startYear: number, endYear: number, voteOption: OptionType, category: string, sortField: string, sortType: string};
 
@@ -23,15 +71,14 @@ export const getObjectParam = ({startRating, endRating, startYear, endYear, vote
   [Field.Votes.Kp]: `${voteOption.value}-${TOO_MANY_VOTES}`,
 });
 
-const getPart = (name: string, value: string) => `field=${name}&search=${value}`;
 
 export const getStringParam = ({startRating, endRating, startYear, endYear, voteOption, category, sortField, sortType} : TypeParam) => {
   const param = getObjectParam({startRating, endRating, startYear, endYear, voteOption, category, sortField, sortType});
 
-  const yearPart = getPart(Field.Year, param[Field.Year]);
-  const ratingPart = getPart(Field.Rating.Kp, param[Field.Rating.Kp]);
-  const votePart = getPart(Field.Votes.Kp, param[Field.Votes.Kp]);
-  const categoryPart = category ? getPart(Field.TypeNumber, category): '';
+  const yearPart = createFilterField(Field.Year, param[Field.Year]);
+  const ratingPart = createFilterField(Field.Rating.Kp, param[Field.Rating.Kp]);
+  const votePart = createFilterField(Field.Votes.Kp, param[Field.Votes.Kp]);
+  const categoryPart = category ? createFilterField(Field.TypeNumber, category): '';
   const sortPart = `sortField=${sortField}&sortType=${sortType}`;
 
   return `?${yearPart}&${ratingPart}&${votePart}&${categoryPart}&${sortPart}`;
@@ -39,78 +86,13 @@ export const getStringParam = ({startRating, endRating, startYear, endYear, vote
 
 export const convertSearchForServer = (search: string) => {
   if (!search) {
-    return `/movie?field=year&search=1900-2022&sortField=${Field.Votes.Kp}&sortType=${-1}&limit=12&token=${TOKEN}`;
+    return `/movie?field=year&search=1900-${FilterRange.Year.End}&sortField=${Field.Votes.Kp}&sortType=${-1}&limit=12&token=${TOKEN}`;
   }
   return `/movie${search}&limit=12&token=${TOKEN}`;
 };
 
 export const convertFilmNameForServer = (search: string) => `/movie?sortField=${Field.Votes.Kp}&sortType=${-1}&limit=5&search=${search}&field=name&isStrict=false&token=${TOKEN}`;
 
-
-export const getParamsFromSearch = (searchParams: URLSearchParams, needField: string, defaultStart: number, defaultEnd: number) => {
-  const fields = searchParams.getAll('field');
-  const searches = searchParams.getAll('search');
-
-  const index = fields.findIndex((field) => field === needField);
-
-  if (index === -1) {
-    return {
-      start: defaultStart,
-      end: defaultEnd,
-    };
-  }
-
-  const ratings = searches[index];
-  const interval = ratings.includes('-');
-
-  if (interval) {
-    const [start, end] = ratings.split('-').map((item) => +item);
-    return {start, end};
-  }
-  return {start: +ratings, end: +ratings};
-};
-
-export const getVoteOptionFromSearch = (searchParams: URLSearchParams) => {
-  const fields = searchParams.getAll('field');
-  const searches = searchParams.getAll('search');
-
-  const index = fields.findIndex((field) => field === Field.Votes.Kp);
-
-  if (index === -1 || !searches[index]) {
-    return Options[0];
-  }
-
-  const votes = +searches[index].split('-')[0] || 0;
-
-  if (votes < +Options[1].value) {
-    return Options[0];
-  }
-  if (votes < +Options[2].value) {
-    return Options[1];
-  }
-  if (votes < +Options[3].value) {
-    return Options[2];
-  }
-  if (votes < +Options[4].value) {
-    return Options[3];
-  }
-
-  return Options[4];
-};
-
-
-export const getCheckedBtn = (searchParams: URLSearchParams) => {
-  const fields = searchParams.getAll('field');
-  const searches = searchParams.getAll('search');
-
-  const index = fields.findIndex((field) => field === Field.TypeNumber);
-
-  if (index === -1 || !searches[index]) {
-    return '';
-  }
-
-  return searches[index] || '';
-};
 
 export const getSortingField = (searchParams: URLSearchParams) => {
   const field = searchParams.get(Field.SortField);
@@ -124,3 +106,71 @@ export const getSortingType = (searchParams: URLSearchParams) => {
 
   return sort && sort === '1' ? sort : '-1';
 };
+
+export const getYearsFromSearch = (searchParams: URLSearchParams | null) => {
+
+  if (!searchParams) {
+    return [FilterRange.Year.Start, FilterRange.Year.End];
+  }
+
+  const fullDict = getFullDict(searchParams);
+
+  const yearsQuery = fullDict[FieldType.Year];
+
+  if (!yearsQuery) {
+    return [FilterRange.Year.Start, FilterRange.Year.End];
+  }
+
+  const [start, end] = yearsQuery.split('-');
+
+  return [+start, +end];
+
+};
+
+export const getRateFromSearch = (searchParams: URLSearchParams | null) => {
+
+  if (!searchParams) {
+    return [FilterRange.Rating.Start, FilterRange.Rating.End];
+  }
+  const fullDict = getFullDict(searchParams);
+
+  const rateQuery = fullDict[FieldType.Rating];
+
+  if (!rateQuery) {
+    return [FilterRange.Rating.Start, FilterRange.Rating.End];
+  }
+
+  const [start, end] = rateQuery.split('-');
+
+  return [+start, +end];
+
+};
+
+export const getVotesFromSearch = (searchParams: URLSearchParams) => {
+  const fullDict = getFullDict(searchParams);
+
+  const voteQuery = fullDict[FieldType.Votes];
+
+  if (!voteQuery) {
+    return null;
+  }
+
+  const [start, end] = voteQuery.split('-');
+
+  return [+start, +end];
+};
+
+
+export const getFieldFromSearch = (searchParams: URLSearchParams, field: FieldType) => {
+  const fullDict = getFullDict(searchParams);
+
+  const query = fullDict[field];
+
+  if (!query) {
+    return null;
+  }
+
+  return query;
+};
+
+

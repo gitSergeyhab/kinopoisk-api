@@ -1,65 +1,67 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useSearchParams } from 'react-router-dom';
 import Select from 'react-select';
-import { Options } from '../../../const';
-import { setVoteOption } from '../../../store/action';
-import { getVoteOption } from '../../../store/filter-reducer/filter-reducer-selectors';
-import { getVoteOptionFromSearch } from '../../../utils/url-utils';
+import { Options, TOO_MANY_VOTES } from '../../../const';
+import { FilterFieldset } from '../filter.style';
 
 
-const colourStyles = {
-  option: (base: any, state: any) => ({
-    ...base,
-    backgroundColor: state.isSelected ? 'black' : 'white',
-    color: state.isSelected ? 'white' : 'black',
-  }),
+export const getVoteOptionFromSearch = (votes: number[] | null) => {
+
+  if (!votes || !votes.length) {
+    return Options[0];
+  }
+
+  if (votes[0] < +Options[4].value) {
+    return Options[0];
+  }
+  if (votes[0] < +Options[3].value) {
+    return Options[4];
+  }
+  if (votes[0] < +Options[2].value) {
+    return Options[3];
+  }
+  if (votes[0] < +Options[1].value) {
+    return Options[2];
+  }
+
+  return Options[1];
 };
 
 
-export default function VotesFilter () {
+type VotesFilterProps = {
+  votes: number[] | null,
+  setVotes: React.Dispatch<React.SetStateAction<number[] | null>>
+};
 
+export default function VotesFilter ({votes, setVotes} : VotesFilterProps) {
 
-  const [searchParams] = useSearchParams();
-
-  const optionFromUrl = getVoteOptionFromSearch(searchParams);
-  const optionFromStore = useSelector(getVoteOption);
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(setVoteOption(optionFromUrl));
-  }, [optionFromUrl, dispatch]);
-
+  const optionFromUrl = getVoteOptionFromSearch(votes);
 
   return (
-    <fieldset className='grey darken-3'>
+    <FilterFieldset className='grey darken-3'>
       <legend>Популярновть</legend>
-      <div className='react-filters'>
-        <div className='react-filters-text'>
-          <div className="App">
-            <Select
 
-              value={optionFromStore}
-              onChange={(item) => {
-                if (Array.isArray(item)) {
-                  throw new Error('Unexpected type passed to ReactSelect onChange handler');
-                }
+      <Select
 
-                if (!item) {
-                  throw new Error('Unexpected type passed to ReactSelect onChange handler');
-                }
-                dispatch(setVoteOption(item));
-              }}
-              options={Options}
-              styles={colourStyles}
-            />
-          </div>
-        </div>
+        value={optionFromUrl}
+        onChange={(item) => {
+          if (Array.isArray(item)) {
+            throw new Error('Unexpected type passed to ReactSelect onChange handler');
+          }
 
-
-      </div>
-    </fieldset>
+          if (!item) {
+            throw new Error('Unexpected type passed to ReactSelect onChange handler');
+          }
+          setVotes([+item.value, TOO_MANY_VOTES]);
+        }}
+        options={Options}
+        styles={{
+          option: (base, state) => ({
+            ...base,
+            backgroundColor: state.isSelected ? 'black' : 'white',
+            color: state.isSelected ? 'white' : 'black',
+          }),
+        }}
+      />
+    </FilterFieldset>
 
   );
 }

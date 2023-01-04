@@ -1,7 +1,7 @@
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { useGetOnePersonQuery } from '../../../services/query-api';
-import { MovieInPerson,  PersonById } from '../../../types/types';
+import { MovieInPerson } from '../../../types/types';
 import { formatDateDDMonthYYYY } from '../../../utils/date-utils';
 import Loading from '../../loading/loading';
 import PersonFilmList from '../../person-film-list/person-film-list';
@@ -46,7 +46,7 @@ export default function PersonPage(){
 
   const {id} = useParams();
 
-  const {data, isError, isFetching} = useGetOnePersonQuery(id);
+  const {data, isError, isFetching} = useGetOnePersonQuery(id as string);
 
   if (isFetching) {
     return <Loading/>;
@@ -56,7 +56,7 @@ export default function PersonPage(){
     return <h2>isError</h2>;
   }
 
-  const {name, birthPlace, birthday, death, movies, photo, profession, sex, age} = data as PersonById;
+  const {name, birthPlace, birthday, death, movies, photo, profession, sex, age} = data;
 
   const birthdayString = birthday ? formatDateDDMonthYYYY(birthday) : 'Неизвестна';
   const deathString = death ? formatDateDDMonthYYYY(death) : null;

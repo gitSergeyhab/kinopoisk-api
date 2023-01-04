@@ -1,10 +1,26 @@
 import { useDispatch, useSelector } from 'react-redux';
+import styled from 'styled-components';
 import { setLocalDB } from '../../store/action';
 import { getDb } from '../../store/local-db-reducer/local-db-reducer-selectors';
 import { deleteRatingFromDBByID, getStarsFromDBByID, writeFilmDBtoStorage } from '../../utils/storage-utils';
 
-import './btn-delete-stars.css';
 
+const Button = styled.button.attrs({type: 'button'})<{active: boolean}>`
+  width: 100%;
+  cursor: ${({active}) => active ? 'pointer' : 'auto'};
+  margin-bottom: 0.1rem;
+  font-size: 10px;
+  background-color: #000000;
+  color: ${({active}) => active ? 'white' : '#000000'};
+
+  border: 1px solid #000000;
+
+  &:hover {
+    border-color: ${({active}) => active ? 'orange' : '#000000'};
+    color: ${({active}) => active ? 'orange' : '#000000'};
+  }
+
+`;
 
 export default function BtnDeleteStars({id} : {id: string | number}) {
 
@@ -12,14 +28,6 @@ export default function BtnDeleteStars({id} : {id: string | number}) {
   const dispatch = useDispatch();
 
   const starsFromBD = getStarsFromDBByID(db, id);
-
-  const activeClass = starsFromBD ? 'react-btn-del-stars--active' : '';
-
-  const title = starsFromBD ? 'удалить оценку' : '';
-
-
-  const ID = id.toString();
-
 
   const handleDeleteClick = () => {
     if (starsFromBD) {
@@ -30,19 +38,8 @@ export default function BtnDeleteStars({id} : {id: string | number}) {
   };
 
   return (
-    <div className='right-align'>
-      <input
-        className="visually-hidden" type="radio" id={ID} name="rate" value={ID}
-        onChange={handleDeleteClick}
-      />
-      <label htmlFor={ID}>
-
-        <i title={title}
-          className={`material-icons react-btn-del-stars ${activeClass}`}
-        >clear
-        </i>
-      </label>
-    </div>
-
+    <Button active={!!starsFromBD} disabled={!starsFromBD} onClick={handleDeleteClick}>
+      удалить оценку
+    </Button>
   );
 }

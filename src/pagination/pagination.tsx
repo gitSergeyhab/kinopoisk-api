@@ -1,9 +1,42 @@
-import { MouseEvent } from 'react';
 import { getPages } from '../utils/pagination-utils';
-import { getFilter } from '../store/filter-reducer/filter-reducer-selectors';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { getStringParam } from '../utils/url-utils';
+import { useSearchParams } from 'react-router-dom';
+import { rewriteSearch } from '../utils/url-utils';
+import { Link } from 'react-router-dom';
+import { FieldType } from '../const';
+import styled from 'styled-components';
+
+const PagesUl = styled.ul`
+margin: 0;
+padding: 0;
+list-style: none;
+display: flex;
+justify-content: space-between;
+align-items: center;
+width: 100%;
+`;
+
+const PagesWrapper = styled.section`
+width: 100%;
+  display: flex;
+justify-content: space-between;
+align-items: center;
+`;
+
+const PageLi = styled.li``;
+
+const PageLink = styled(Link)<{current: number, disable: number}>`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #000000;
+  color: ${({current}) => current ? 'orange' : '#FFFFFF'};
+  padding: 1px 4px;
+
+  &:hover {
+    outline: 1px #FFFFFF solid;
+  }
+`;
 
 
 type PageType = {pageItem : {page: number, name: string}, currentPage: number}
@@ -13,27 +46,22 @@ type PaginationType = {currentPage: number, pages: number}
 function Page({pageItem, currentPage} : PageType) {
   const {page, name} = pageItem;
 
-  const filter = useSelector(getFilter);
+  const [searchParams] = useSearchParams();
 
-  const navigate = useNavigate();
+  const fields = [{field: FieldType.Page, value: `${page}`}];
+
+  const newSearch = rewriteSearch({searchParams, fields});
 
 
-  const handlePageClick = (evt: MouseEvent<HTMLAnchorElement>) => {
-    evt.preventDefault();
-    const pageParam = `&page=${page}`;
-    const filterParams = getStringParam(filter);
-    navigate(`${filterParams}${pageParam}`);
-  };
+  const current = currentPage === page ? 1 : 0;
 
-  const classes = currentPage === page ? 'black white-text' : 'white-text';
+
   return (
-    <li className="waves-effect">
-      <a
-        onClick={handlePageClick}
-        href="/" className={classes}
-      >{name}
-      </a>
-    </li>
+    <PageLi>
+      <PageLink current={current} disable={0} to={newSearch}>
+        {name}
+      </PageLink>
+    </PageLi>
   );
 }
 
@@ -41,32 +69,17 @@ const DISABLED_CLASS = 'disabled';
 
 export default function Pagination({currentPage, pages} : PaginationType) {
   const namedPages = getPages(pages, currentPage);
+  const [searchParams] = useSearchParams();
 
-  const filter = useSelector(getFilter);
+  if (!namedPages) {
+    return null;
+  }
 
-  const navigate = useNavigate();
+  const fieldsPrev = [{field: FieldType.Page, value: `${ currentPage !== 1 ? currentPage - 1 : 1 }`}];
+  const fieldsNext = [{field: FieldType.Page, value: `${ currentPage !== pages ? currentPage + 1 : pages}`}];
 
-  const goToPage = (page: number) => {
-    const pageParam = `&page=${page}`;
-    const filterParams = getStringParam(filter);
-    navigate(`${filterParams}${pageParam}`);
-  };
-
-
-  const handleBackClick = (evt: MouseEvent<HTMLAnchorElement>) => {
-    evt.preventDefault();
-    if (currentPage !== 1) {
-      goToPage(currentPage - 1);
-    }
-
-  };
-
-  const handleForwardClick = (evt: MouseEvent<HTMLAnchorElement>) => {
-    evt.preventDefault();
-    if (currentPage !== pages) {
-      goToPage(currentPage + 1);
-    }
-  };
+  const newSearchPrev = rewriteSearch({searchParams, fields: fieldsPrev});
+  const newSearchNext = rewriteSearch({searchParams, fields: fieldsNext});
 
   const firstPageClass = currentPage === 1 ? DISABLED_CLASS : '';
   const lastPageClass = currentPage === pages ? DISABLED_CLASS : '';
@@ -76,27 +89,21 @@ export default function Pagination({currentPage, pages} : PaginationType) {
 
   const pagesList = namedPages.map((item) => <Page key={item.page} pageItem={item} currentPage={currentPage}/>);
   return(
-    <div className="center-align col s12">
-      <ul className="pagination">
+    <PagesWrapper>
+      <PagesUl>
         <li className={firstPageClass}>
-          <a
-            onClick={handleBackClick}
-            href="#!"
-          >
+          <Link to={newSearchPrev}>
             <i className={iconClassBack}>chevron_left</i>
-          </a>
+          </Link>
         </li>
         {pagesList}
 
         <li className={lastPageClass}>
-          <a
-            onClick={handleForwardClick}
-
-            href="#!"
-          >
+          <Link to={newSearchNext}>
             <i className={iconClassForward}>chevron_right</i>
-          </a>
+          </Link>
         </li>
-      </ul>
-    </div>);
+      </PagesUl>
+    </PagesWrapper>
+  );
 }

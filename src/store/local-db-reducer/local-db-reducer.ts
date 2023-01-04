@@ -7,7 +7,7 @@ export type State = {
   db: FilmCardsData | null,
 }
 
-const initState = {
+const initState: State = {
   db: getFilmsDataFromStorage(),
 };
 

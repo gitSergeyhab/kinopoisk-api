@@ -1,8 +1,8 @@
-import { Link } from 'react-router-dom';
 import { Film, FilmCard as FilmCardType} from '../../types/types';
-import { getSyntheticRating } from '../../utils/utils';
+import { getSyntheticRating, round10 } from '../../utils/utils';
 import BtnDeleteStars from '../btn-delete-stars/btn-delete-stars';
 import Stars from '../stars/stars';
+import { CardContent, CardInfo, CardLi, CardText, Grade, Image, ImageContainer, ImageLink, Title, TitleLink } from './film-card.style';
 
 
 export function FilmCard({film} : {film: Film | FilmCardType}) {
@@ -11,33 +11,43 @@ export function FilmCard({film} : {film: Film | FilmCardType}) {
   const {name, poster, rating, year, movieLength, votes, id, description} = film;
   const filmCard = {name, poster, rating, year, movieLength, votes, id, description};
 
+  const rateKp = rating?.kp;
+  const ourRate = getSyntheticRating(rating, votes).ratingSynth;
+
+  const ourRateKpElement = ourRate ?
+    <CardText title='наш рейтинг'>{ourRate}<Grade our >grade</Grade></CardText> :
+    null;
+
+  const rateKpElement = rateKp ?
+    <CardText title='рейтинг Кинопоиска'>{round10(rateKp)}<Grade >grade</Grade>({votes?.kp})</CardText> :
+    null;
+
+  const yearElement = year ? <CardText>{year} год</CardText> : null;
+
   return (
-    <>
+    <CardLi>
+
+
       <BtnDeleteStars id={id} key={id}/>
-      <Stars filmCard={filmCard}/>
+      <Stars size={0.7} filmCard={filmCard as FilmCardType}/>
 
-      <Link  to={`/films/${id}`}>
-        <div className="card-image waves-effect waves-block waves-light">
-          <img className="activator" src={poster.previewUrl} alt={name}/>
-        </div>
-      </Link>
-      <div className="card-content">
-        <span className="card-title activator grey-text text-darken-4">
-          <Link to={`/films/${id}`}>{name}</Link>
-          <i className="material-icons right">more_vert</i>
-        </span>
-        <p>Pейтинг:  {getSyntheticRating(rating, votes).ratingSynth}
-          <i className="large grade material-icons" style={{fontSize: '1.1rem'}}>grade</i> ({votes.kp})
-        </p>
+      <ImageLink  to={`/films/${id}`}>
+        <ImageContainer>
+          <Image src={poster?.previewUrl} alt={name} />
+        </ImageContainer>
+      </ImageLink>
+      <CardContent>
+        <Title>
+          <TitleLink to={`/films/${id}`}>{name}</TitleLink>
+        </Title>
+        <CardInfo>
+          {rateKpElement}
+          {ourRateKpElement}
+          {yearElement}
+        </CardInfo>
 
-      </div>
-      <div className="card-reveal">
-        <span className="card-title grey-text text-darken-4"><i className="material-icons right">close</i></span>
-        <p>Год: {year}</p>
-        <p>Время: {movieLength} минут</p>
-        <p>{description}</p>
+      </CardContent>
 
-      </div>
-    </>
+    </CardLi>
   );
 }

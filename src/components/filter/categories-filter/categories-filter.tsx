@@ -1,65 +1,75 @@
-import { useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
-import { useSearchParams } from 'react-router-dom';
+import styled from 'styled-components';
 import { TypeNumber } from '../../../const';
-import { setCategory } from '../../../store/action';
 import { TypeBtn } from '../../../types/types';
-import { getCheckedBtn } from '../../../utils/url-utils';
-
-import './categories-filter.css';
+import { FilterFieldset } from '../filter.style';
 
 
-function CategoryBtn({category, checked, reset} : {category: TypeBtn, checked: string, reset: boolean} ) {
-  const {name, value} = category;
+const CategoryUl = styled.ul`
+  padding: 0;
+  margin: 0;
+  list-style: none;
+`;
 
-  const ref = useRef<null | HTMLInputElement>(null);
+const CategoryLi= styled.li`
+  & [type="radio"]:checked+span:after, & [type="radio"].with-gap:checked+span:after {
+    background-color: orange !important;
+  }
 
-  useEffect(() => {
-    if (ref.current && reset && value === '') {
-      ref.current.click();
-    }
-  }, [reset, value]);
+  & [type="radio"]:checked+span:after, & [type="radio"].with-gap:checked+span:before, & [type="radio"].with-gap:checked+span:after {
+    border: 2px solid orange !important;
+  }
 
-  const dispatch = useDispatch();
+  & [type="radio"]:checked+span {
+    color: orange
+  }
+`;
 
-  const handleCategoryChange = () => {
-    dispatch(setCategory(value));
-  };
+
+type CategoryBtnProps = {
+  categoryObj: TypeBtn,
+  checkedCategory: string | null,
+  setCategory: React.Dispatch<React.SetStateAction<string | null>>
+}
+
+function CategoryBtn({categoryObj, checkedCategory, setCategory} : CategoryBtnProps ) {
+  const {name, value} = categoryObj;
+
+  const handleCategoryChange = () =>  setCategory(value);
 
 
   return (
-    <p className='left-align'>
+    <CategoryLi>
       <label>
         <input
-          ref={ref}
           onChange={handleCategoryChange}
           name="categories"
           type="radio"
           value={value}
-          defaultChecked={checked === value}
+          checked={checkedCategory === value}
         />
         <span>{name}</span>
       </label>
-    </p>
+    </CategoryLi>
   );
 }
 
+type CategoriesFilterProps = {
+  category: string | null,
+  setCategory: React.Dispatch<React.SetStateAction<string | null>>
+};
 
-export default function CategoriesFilter ({reset} : {reset: boolean}) {
+export default function CategoriesFilter ({category, setCategory} : CategoriesFilterProps) {
 
-  const [searchParams] = useSearchParams();
-
-  const checkedBtn = getCheckedBtn(searchParams);
-
-  const buttons = Object.values(TypeNumber).map((item) => <CategoryBtn category={item} key={item.value} checked={checkedBtn} reset={reset}/>);
+  const buttons = Object.values(TypeNumber).map((item) => <CategoryBtn categoryObj={item} key={item.value} checkedCategory={category || ''} setCategory={setCategory}/>);
 
   return (
-    <fieldset className='grey darken-3'>
+    <FilterFieldset>
       <legend>Категория</legend>
+      <CategoryUl>
+        {buttons}
+      </CategoryUl>
 
-      {buttons}
 
-    </fieldset>
-
+    </FilterFieldset>
   );
 }

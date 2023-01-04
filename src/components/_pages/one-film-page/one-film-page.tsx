@@ -1,20 +1,16 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
-import { FILM_BY_ID } from '../../../mock/mock';
-import { createAPI } from '../../../services/api';
 import { useGetOneFilmQuery } from '../../../services/query-api';
 import { setPersonsPopup } from '../../../store/action';
 import { getPersonsPopupStatus } from '../../../store/popup-reducer/popup-reducer-selectos';
-import { FilmById, Person, SimilarMovie } from '../../../types/types';
+import { FilmCard, Person, SimilarMovie } from '../../../types/types';
 import { getPersonKey, getSyntheticRating } from '../../../utils/utils';
 import Loading from '../../loading/loading';
 import Stars from '../../stars/stars';
 
 import ModalMoviePersons from '../../_modals/modal-movie-persons/modal-movie-persons';
 
-
-// const api = createAPI();
 
 const StartValue = {
   Country: 1,
@@ -94,32 +90,32 @@ export default function OneFilmPage(){
 
   const {id} = useParams();
 
-  const {data, isError, isLoading, isFetching} = useGetOneFilmQuery(id);
+  const {data, isError, isLoading, isFetching} = useGetOneFilmQuery(id as string);
   // console.log(data);
 
   if (isLoading) {
-    console.log('loading');
+    // console.log('loading');
   }
 
   if (isFetching) {
-    console.log('loading');
+    // console.log('loading');
 
     return <Loading/>;
   }
 
 
   if (isError || !data) {
-    console.log('isError');
-    if(isError) {console.log('isError!!!');}
-    if(!data) {console.log('!data!!!');}
+    // console.log('isError');
+    // if(isError) {console.log('isError!!!');}
+    // if(!data) {console.log('!data!!!');}
 
     return <h2>isError</h2>;
   }
 
-  const {name, votes, year, rating, poster, description, countries, genres, persons, similarMovies, movieLength} = data as FilmById;
+  const {name, votes, year, rating, poster, description, countries, genres, persons, similarMovies} = data;
 
 
-  const filmCard = {name, poster, rating, year, movieLength, votes, id: data.id, description};
+  // const filmCard = {name, poster, rating, year, movieLength, votes, id: data.id, description};
 
   const countryList = countries ? countries.slice(0, countryNum).map((item) => <ItemLi item={item.name} key={item.name}/>) : null;
   const genreList = genres ? genres.slice(0, genreNum).map((item) => <ItemLi item={item.name} key={item.name}/>) : null;
@@ -144,7 +140,7 @@ export default function OneFilmPage(){
 
   const handleOpenAllPersonBtnClick = () => dispatch(setPersonsPopup(true));
 
-  const personsPopup = isPersonsPopup ? <ModalMoviePersons persons={persons}/> : null;
+  const personsPopup = isPersonsPopup ? <ModalMoviePersons persons={persons || []}/> : null;
 
 
   return (
@@ -153,11 +149,11 @@ export default function OneFilmPage(){
         <h2 className="header center-align">{name}</h2>
         <div className="card horizontal blue-grey darken-1 black-text">
           <div className="card-image">
-            <img src={poster.url} alt={name}/>
+            <img src={poster?.url} alt={name}/>
           </div>
           <div className="card-stacked">
             <div style={{padding: '1rem'}} className='blue-grey'>
-              <Stars filmCard={filmCard}/>
+              <Stars filmCard={data as FilmCard}/>
               <p className='blue-grey lighten-1'>Синтетический рейтинг: {ratingSynth} <i className="large grade material-icons" style={{fontSize: '1.1rem'}}>grade</i>
                 {forAudience
                   ?
@@ -170,9 +166,9 @@ export default function OneFilmPage(){
                   null}
               </p>
 
-              <p>Кинопоиск: {rating.kp} <i className="large grade material-icons" style={{fontSize: '1.1rem'}}>grade</i> ({votes.kp})</p>
-              <p>IMDB: {rating.imdb} <i className="large grade material-icons" style={{fontSize: '1.1rem'}}>grade</i> ({votes.imdb})</p>
-              <p>Критики: {rating.filmCritics} <i className="large grade material-icons" style={{fontSize: '1.1rem'}}>grade</i> ({votes.filmCritics})</p>
+              <p>Кинопоиск: {rating?.kp} <i className="large grade material-icons" style={{fontSize: '1.1rem'}}>grade</i> ({votes?.kp})</p>
+              <p>IMDB: {rating?.imdb} <i className="large grade material-icons" style={{fontSize: '1.1rem'}}>grade</i> ({votes?.imdb})</p>
+              <p>Критики: {rating?.filmCritics} <i className="large grade material-icons" style={{fontSize: '1.1rem'}}>grade</i> ({votes?.filmCritics})</p>
 
               <p style={{padding: '1rem'}} className='blue-grey darken-2'>{year} год</p>
 

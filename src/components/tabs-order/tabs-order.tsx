@@ -1,59 +1,97 @@
-import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { ORDER_CATEGORIES } from '../../const';
-import { setSortType } from '../../store/action';
+import styled from 'styled-components';
+import { Field, FieldType, ORDER_CATEGORIES } from '../../const';
 import { TypeBtn } from '../../types/types';
-import { getSortingType, getStringParam } from '../../utils/url-utils';
-import { getFilter } from '../../store/filter-reducer/filter-reducer-selectors';
+import { getFieldFromSearch, rewriteSearch } from '../../utils/url-utils';
 
-import './tab-order.css';
 
-function SortTab({sort, checkedBtn} : {sort: TypeBtn, checkedBtn: string}) {
+const TabList = styled.ul`
+width: 100%;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-  const filter = useSelector(getFilter);
+  @media (min-width: 900px) {
+    width: 9%;
+    flex-grow: 1;
+  };
+`;
+
+const TabLi = styled.li`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 2;
+  width: 100%;
+
+  @media (min-width: 600px) {
+    width: auto;
+  };
+`;
+
+const TabBtn = styled.button.attrs({type: 'button'})<{current: boolean}>`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: 2px #424242 solid;
+
+  &:hover {
+    color: orange;
+  }
+
+  background: ${({current}) => current ? '#000000' : '#FFFFFF'};
+  color: ${({current}) => current ? '#FFFFFF' : '#000000'};
+
+  &:active {
+    border-color: orange ;
+  }
+`;
+
+function SortTab({sort} : {sort: TypeBtn}) {
+
+  const [searchParams] = useSearchParams();
+
+  const order = getFieldFromSearch(searchParams, FieldType.SortType) || '-1';
+
 
   const {name, value} = sort;
-
-  const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
   const handleTabClick = () => {
-    dispatch(setSortType(value));
-    const sortFilter = {...filter, sortType: value};
-    navigate(getStringParam(sortFilter));
+    const fields = [
+      {field: FieldType.SortType, value},
+      {field: FieldType.Page, value: '1'},
+      {field: FieldType.SortField, value: Field.Votes.Kp, noChange: true},
+    ];
+    const newSearch = rewriteSearch({ searchParams, fields });
+    navigate(newSearch);
   };
 
   return (
-    <li>
-
-      <button
-        className={checkedBtn === value ? 'orange-text grey darken-4' : 'grey'}
-        onClick={handleTabClick}
-        type='button' value={value}
-      ><i className="material-icons" style={{fontSize: '1rem'}}>{name}</i>
-      </button>
-    </li>
+    <TabLi>
+      <TabBtn current={order === value} onClick={handleTabClick}>
+        <i className="material-icons" style={{fontSize: '1rem'}}>{name}</i>
+      </TabBtn>
+    </TabLi>
   );
 }
 
 
-//
 export default function TabsOrder () {
 
-  const [searchParam] = useSearchParams();
-
-  const checkedBtn = getSortingType(searchParam);
-
-  const orderTabs = ORDER_CATEGORIES.map((item) => <SortTab checkedBtn={checkedBtn} sort={item} key={item.value}/>);
+  const orderTabs = ORDER_CATEGORIES.map((item) => <SortTab  sort={item} key={item.value}/>);
 
   return (
-    <div className="row col s2 grey darken-3">
-      <div className="col s12 grey darken-3">
-        <ul className="react-tabs--order grey darken-3">
-          {orderTabs}
-        </ul>
-      </div>
-    </div>
+    <TabList>
+      {orderTabs}
+    </TabList>
   );
 }
+

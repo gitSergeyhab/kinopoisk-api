@@ -104,9 +104,13 @@ export default function WatchedFilms () {
       ));
 
 
+  // const handleTestClick = () => getTest();
+
+
   return(
 
     <div className="row black">
+
       <div className="col s1"></div>
       <div className="col s10 brown darken-3 text-lighten-4">
         <h2 className="header center-align orange-text">Оцененныые фильмы</h2>
@@ -118,6 +122,7 @@ export default function WatchedFilms () {
         <div style={{display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap'}}>
 
           {filmCardsList}
+
 
         </div>
       </div>

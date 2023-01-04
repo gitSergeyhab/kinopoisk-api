@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import FocusLock from 'react-focus-lock';
 import { RemoveScroll } from 'react-remove-scroll';
 
 import { setPersonsPopup } from '../../../store/action';
-import { FilmById, Person, SimilarMovie } from '../../../types/types';
+import { Person } from '../../../types/types';
 
 import './modal-movie-persons.css';
 

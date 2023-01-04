@@ -1,6 +1,20 @@
+export const TOO_MANY_VOTES = 999999999;
+
+
 export const enum APIRoute {
   Films = '/movie',
   Persons = '/person'
+}
+
+export const enum FieldType {
+  Page = 'page',
+  SortField = 'sortField',
+  SortType = 'sortType',
+  Rating = 'rating.kp',
+  TypeNum = 'typeNumber',
+  Votes = 'votes.kp',
+  Year = 'year',
+  Name = 'name'
 }
 
 export const Field = {
@@ -29,28 +43,28 @@ export const TypeNumber = {
   Cartoon: {value: '3', name: 'Анимация'},
   Anime: {value: '4', name: 'Аниме'},
   AnimatesSerial: {value: '5', name: 'Аниме-сериалы'},
-  Show: {value: '6', name: 'ТВ - ШОУ'},
+  Show: {value: '6', name: 'Шоу'},
 };
 
 
 export const FilterRange = {
   Rating: {
-    Start: 0,
+    Start: 1,
     End: 10,
   },
   Year: {
-    Start: 1900,
+    Start: 1895,
     Middle: 1990,
-    End: 2023,
+    End: new Date().getFullYear(),
   },
 };
 
 export const Options = [
-  { value: '0', label: 'Все'},
-  { value: '500', label: 'Даже малоизвестные'},
-  { value: '5000', label: 'Начиная с более-менее известных'},
-  { value: '50000', label: 'Только известные'},
-  { value: '300000', label: 'Топ'},
+  { value: '2', label: 'все'},
+  { value: '300000', label: 'ТОП'},
+  { value: '50000', label: 'популярные'},
+  { value: '5000', label: 'известные'},
+  { value: '500', label: 'малоизвестные'},
 ];
 
 export const SORT_CATEGORIES = [

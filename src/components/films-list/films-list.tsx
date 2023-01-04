@@ -1,11 +1,34 @@
 import { useLocation } from 'react-router-dom';
-import { FILMS } from '../../mock/mock';
+import styled from 'styled-components';
+// import { moviesMock } from '../../mock/movies-mock';
 import Pagination from '../../pagination/pagination';
 import { useGetFilmsByParamsQuery } from '../../services/query-api';
 import { Film } from '../../types/types';
 import { FilmCard } from '../film-card/film-card';
 import LoadingLocal from '../loading-local/loading-local';
 import Loading from '../loading/loading';
+
+
+const FilmSection = styled.section`width: 100%;`;
+
+
+const FilmUl = styled.ul`
+  padding: 2px;
+  margin: 0;
+  list-style: none;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  width: 100%;
+
+  @media (min-width: 700px) {
+    grid-template-columns: 1fr 1fr;
+  };
+  @media (min-width: 1200px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  };
+`;
 
 
 export default function FilmsList() {
@@ -22,7 +45,7 @@ export default function FilmsList() {
   }
 
   if (isError || !data) {
-    console.log('isError');
+    // console.log('isError');
 
     return <h2>isError</h2>;
   }
@@ -31,19 +54,24 @@ export default function FilmsList() {
 
 
   const filmList = films.map((item) => (
-    <div className="card col s6 m4 l3 gap1" key={item.id}>
-      <FilmCard film={item} />
-    </div>
+    <FilmCard key={item.id} film={item} />
   ));
 
 
   return (
-    <div style={{display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap'}}>
+    <FilmSection>
       {isFetching ? <LoadingLocal/> : null}
 
-      {filmList}
+      <FilmUl>
 
+        {filmList}
+
+
+      </FilmUl>
       <Pagination currentPage={data.page} pages={data.pages}/>
 
-    </div>);
+
+    </FilmSection>
+
+  );
 }

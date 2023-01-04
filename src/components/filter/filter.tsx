@@ -1,70 +1,67 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { getFilter } from '../../store/filter-reducer/filter-reducer-selectors';
-import { getStringParam } from '../../utils/url-utils';
+import { useState, FormEventHandler } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+
 import RatingsFilter from './rating-filter/rating-filter';
 import YearsFilter from './years-filter/years-filter';
 import VotesFilter from './votes-filter/votes-filter';
 import CategoriesFilter from './categories-filter/categories-filter';
+import { getFieldFromSearch, getRateFromSearch, getVotesFromSearch, getYearsFromSearch, rewriteSearch } from '../../utils/url-utils';
+import { Field, FieldType } from '../../const';
+import { FilterForm, FilterReset, FilterSubmit } from './filter.style';
 
-import './filter.css';
-import { useEffect, useRef, useState } from 'react';
-import { resetFilter } from '../../store/action';
+import './filter.css'; //стили для nouislider
 
 
 export default function Filter() {
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();
 
-  const [reset, setReset] = useState(false);
-
-  useEffect(() => {
-    if (reset) {
-      dispatch(resetFilter());
-      setReset(false);
-    }
-  }, [reset, dispatch]);
-
-  const filter = useSelector(getFilter);
-
-  const formRef = useRef<null | HTMLFormElement>(null);
+  const [years, setYears] = useState(getYearsFromSearch(searchParams));
+  const [rate, setRate] = useState(getRateFromSearch(searchParams));
+  const [votes, setVotes] = useState(getVotesFromSearch(searchParams));
+  const [category, setCategory] = useState(getFieldFromSearch(searchParams, FieldType.TypeNum));
 
 
-  const handleSearchClick = () =>
-    navigate(getStringParam(filter));
+  const handleSubmit: FormEventHandler = (evt) => {
+    evt.preventDefault();
+    const fields = [
+      {field: FieldType.TypeNum, value: category},
+      {field: FieldType.Rating, value: rate ? rate.join('-') : null},
+      {field: FieldType.Votes, value: votes ? votes.join('-') : null},
+      {field: FieldType.Year, value: years ? years.join('-') : null},
+      {field: FieldType.Page, value: '1'},
+      {field: FieldType.SortField, value: Field.Votes.Kp, noChange: true},
+      {field: FieldType.SortType, value: '-1', noChange: true},
+    ];
+
+    const newSearch = rewriteSearch({searchParams, fields});
+    navigate(newSearch);
+  };
 
 
   const handleResetClick = () => {
     navigate('');
-    setReset(true);
+    setYears(getYearsFromSearch(null));
+    setRate(getRateFromSearch(null));
+    setVotes(null);
+    setCategory(null);
   };
 
+
   return(
-    <form className="col s3 react-filter grey darken-4 white-text react-filter" ref={formRef}>
+    <FilterForm onSubmit={handleSubmit}>
 
-      <YearsFilter reset={reset}/>
-      <RatingsFilter reset={reset}/>
-      <VotesFilter/>
-      <CategoriesFilter reset={reset}/>
+      <YearsFilter years={years} setYears={setYears}/>
+      <RatingsFilter rate={rate} setRate={setRate}/>
+      <VotesFilter votes={votes} setVotes={setVotes}/>
+      <CategoriesFilter category={category} setCategory={setCategory} />
 
-      <button
-        onClick={handleSearchClick}
-        className='btn black orange-text'
-        type='button'
-        style={{marginBottom: '20px'}}
-      >Искать
-      </button>
-      <button
-        onClick={handleResetClick}
-        className='btn black red-text'
-        type='button'
-        style={{marginBottom: '20px'}}
-      >Сбросить
-      </button>
+      <FilterSubmit>Искать</FilterSubmit>
 
+      <FilterReset onClick={handleResetClick}>Сбросить</FilterReset>
 
-    </form>
+    </FilterForm>
   );
 }
 
