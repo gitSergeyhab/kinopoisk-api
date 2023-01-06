@@ -60,7 +60,7 @@ export const FilterRange = {
 };
 
 export const Options = [
-  { value: '2', label: 'все'},
+  { value: '10', label: 'все'},
   { value: '300000', label: 'ТОП'},
   { value: '50000', label: 'популярные'},
   { value: '5000', label: 'известные'},
@@ -77,3 +77,7 @@ export const ORDER_CATEGORIES = [
   {name: 'arrow_drop_down', value: '-1'},
   {name: 'arrow_drop_up', value: '1'},
 ];
+
+export const enum DefaultPath {
+  Poster = '/img/default/default-poster.jpg'
+}

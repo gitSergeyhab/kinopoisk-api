@@ -252,13 +252,15 @@ export type SimilarMovie = {
   enName?: string;
   alternativeNam?: string;
   poster: Poster;
-
 }
+
 
 export type FilmById = {
   id: number;
   type: string | null;
-  name: string;
+  alternativeName: string,
+  name: string,
+  enName: string,
   description?: string;
   slogan?: string;
   year?: number;
@@ -280,7 +282,9 @@ export type FilmById = {
 
 export type FilmCard = {
   id: string | number;
-  name: string;
+  alternativeName: string,
+  name: string,
+  enName: string,
   poster?: Poster;
   rating?: ResourceNum;
   year?: number;
@@ -319,17 +323,17 @@ export type FilmCardsData = {[id: string]: FilmCardData};
 export type State = ReducerState;
 
 export type Film = {
+  'alternativeName': string,
+  'name': string,
+  'enName': string,
   'poster'?: Poster,
   'rating'?: ResourceNum,
   'votes': ResourceNum,
   'movieLength'?: number,
   'id': number,
   'type'?: string,
-  'name'?: string,
   'description'?: string,
   'year'?: number,
-  'alternativeName'?: string,
-  'enName'?: string,
   'names'?: Name[],
   'shortDescription'?: string,
 };

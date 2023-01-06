@@ -27,7 +27,7 @@ export const getPages = (pages: number, currentPage: number) => {
   const lastHiddenPage = currentPage < pages -2 ? Math.floor((currentPage + pages) / 2) : null;
 
   const notNullPages = [first, second, third, firstHiddenPage, left, currentPage, right, lastHiddenPage, thirdFromEmd, secondFromEmd, last].filter((item) => item);
-  const uniquePages = (notNullPages as number[]).filter(getUnique);
+  const uniquePages = (notNullPages as number[]).filter(getUnique).sort((one, two) => one - two);
 
   return getNamedPages(uniquePages, firstHiddenPage, lastHiddenPage);
 };

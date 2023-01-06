@@ -5,6 +5,7 @@ import { setLocalDB } from '../../store/action';
 import { getDb } from '../../store/local-db-reducer/local-db-reducer-selectors';
 import { FilmCard } from '../../types/types';
 import { addFilmToDB, getStarsFromDBByID, writeFilmDBtoStorage } from '../../utils/storage-utils';
+import { IconStar } from '../common/common.style';
 
 
 export const STAR_NUM = 10;
@@ -14,14 +15,6 @@ const StarInput = styled.input`
   transform: scale(0);
 `;
 
-const IconStar = styled.i.attrs({className: 'material-icons'})<{chosen: boolean, size?: number}>`
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  font-size:  ${({size}) => size ? `${size}rem` : '1rem'};
-  cursor: pointer;
-  color: ${({chosen}) => chosen ? 'orange' : ''};
-`;
 
 const StarsUL = styled.ul`
   list-style: none;

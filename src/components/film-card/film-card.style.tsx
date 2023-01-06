@@ -4,21 +4,14 @@ import styled from 'styled-components';
 
 export const ImageContainer = styled.div`
   max-width: 100%;
+  min-height: 160px;
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
-  outline: 5px solid transparent;
   &:hover, &:focus {
-    outline: 1px solid orange;
+    opacity: 0.8;
   }
-`;
-
-
-export const Grade = styled.i.attrs({className: 'material-icons'})<{our?: boolean}>`
-  font-size: 0.8rem !important;
-  cursor: pointer;
-  color: ${({our}) => our ? 'orange' : ''};
 `;
 
 export const Image = styled.img`
@@ -46,14 +39,29 @@ export const Title = styled.h3`
   justify-content: center;
   align-items: center;
   text-align: center;
+  font-size: 18px;
+  word-wrap: break-word;
+  word-break: break-word; /* для Chrome */
+  min-height: 80px;
 
-  min-height: 70px;
+  
+  @media (min-width: 1400px) {
+    font-size: 1.5rem;
+  };
 
+  @media (min-width: 2000px) {
+    font-size: 2.2rem;
+  };
+
+  @media (min-width: 3000px) {
+    font-size: 3rem;
+  };
 `;
 
 export const TitleLink = styled(Link)`
   color: orange;
   text-decoration: none;
+
   &:hover, &:focus {
     color: #da9007;
   }
@@ -70,3 +78,9 @@ export const CardContent = styled.div`
 export const CardInfo = styled.div`
 `;
 export const CardText = styled.p``;
+
+export const NoImageText = styled.p`
+  color: white;
+  text-decoration: none;
+  text-align: center;
+`;

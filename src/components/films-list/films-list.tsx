@@ -1,7 +1,7 @@
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 // import { moviesMock } from '../../mock/movies-mock';
-import Pagination from '../../pagination/pagination';
+import Pagination from '../pagination/pagination';
 import { useGetFilmsByParamsQuery } from '../../services/query-api';
 import { Film } from '../../types/types';
 import { FilmCard } from '../film-card/film-card';
