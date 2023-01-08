@@ -91,7 +91,9 @@ export const convertSearchForServer = (search: string) => {
   return `/movie${search}&limit=12&token=${TOKEN}`;
 };
 
-export const convertFilmNameForServer = (search: string) => `/movie?sortField=${Field.Votes.Kp}&sortType=${-1}&limit=5&search=${search}&field=name&isStrict=false&token=${TOKEN}`;
+
+export const convertFilmNameForServer = (search: string) => `/movie?sortField=${Field.Votes.Kp}&sortType=${-1}&limit=4&search=${search}&field=name&isStrict=false&token=${TOKEN}`;
+export const convertPersonNameForServer = (search: string) => `/person?sortField=name&sortType=${1}&limit=4&search=${search}&field=name&isStrict=false&token=${TOKEN}`;
 
 
 export const getSortingField = (searchParams: URLSearchParams) => {

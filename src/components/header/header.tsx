@@ -1,54 +1,39 @@
-import { useDispatch } from 'react-redux';
-import { Link, useLocation } from 'react-router-dom';
-import { resetFilter } from '../../store/action';
+
 import { AppRoute } from '../app/app';
 import Search from '../search/search';
+import { SVG } from '../svg/svg';
+import { HeaderContainer, HeaderEl, HeaderNav, LogoLink, LogoNavWrapper, LogoSVGContainer, NavLi, NavList } from './header.style';
 
-import './header.css';
 
-
-const ACTIVE_LINK_CLASS = 'react-header__link--active';
 export default function Header() {
-
-  const {pathname} = useLocation();
-
-  const dispatch = useDispatch();
-
-  const handleLinkClick = () => dispatch(resetFilter());
   return (
-    <nav style={{marginBottom: '1rem'}}>
-      <div className="nav-wrapper grey darken-4 white-text">
-        <Link
-          to={AppRoute.Films}
-          className='react-header__logo'
-          onClick={handleLinkClick}
-        >Kinopoisk-API
-        </Link>
+    <HeaderEl>
+      <HeaderContainer>
+        <LogoNavWrapper>
+          <LogoLink to={AppRoute.Films}>
+            Kinopoisk&nbsp;<LogoSVGContainer><SVG name='logo'/></LogoSVGContainer>&nbsp;API
+          </LogoLink>
 
+          <HeaderNav>
+            <NavList>
+              <NavLi>
+                <LogoLink to={AppRoute.Films}>
+                  Главная
+                </LogoLink>
+              </NavLi>
 
-        <ul className="right hide-on-med-and-down">
-          <li><Search/></li>
-          <li>
-            <Link
-              to={AppRoute.Films}
-              className={pathname === AppRoute.Films ? ACTIVE_LINK_CLASS : ''}
-              onClick={handleLinkClick}
-            >Главная
-            </Link>
-          </li>
+              <NavLi>
+                <LogoLink to={AppRoute.Watched}>
+                  Посмотренные
+                </LogoLink>
+              </NavLi>
+            </NavList>
+          </HeaderNav>
+        </LogoNavWrapper>
 
-          <li>
-            <Link
-              to={AppRoute.Watched}
-              className={pathname === AppRoute.Watched ? ACTIVE_LINK_CLASS : ''}
-              onClick={handleLinkClick}
-            >
-              Просмотренные фильмы
-            </Link>
-          </li>
-        </ul>
-      </div>
-    </nav>
+        <Search/>
 
+      </HeaderContainer>
+    </HeaderEl>
   );}
 

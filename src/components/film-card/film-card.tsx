@@ -3,7 +3,7 @@ import { getSyntheticRating, round10 } from '../../utils/utils';
 import BtnDeleteStars from '../btn-delete-stars/btn-delete-stars';
 import { Grade } from '../common/common.style';
 import Stars from '../stars/stars';
-import { CardContent, CardInfo, CardLi, CardText, Image, ImageContainer, ImageLink, NoImageText, Title, TitleLink } from './film-card.style';
+import { CardContent, CardDiv, CardInfo, CardText, Image, ImageContainer, ImageLink, NoImageText, Title, TitleLink } from './film-card.style';
 
 
 export function FilmCard({film} : {film: Film | FilmCardType}) {
@@ -28,7 +28,7 @@ export function FilmCard({film} : {film: Film | FilmCardType}) {
   const image = poster?.previewUrl || poster?.url ? <Image src={poster?.previewUrl || poster?.url} alt={name || enName || alternativeName} /> : <NoImageText>На Кинопоиске нет постера для этого фильма...</NoImageText>;
 
   return (
-    <CardLi>
+    <CardDiv>
       <BtnDeleteStars id={id} key={id}/>
       <Stars size={0.7} filmCard={filmCard as FilmCardType}/>
 
@@ -47,6 +47,6 @@ export function FilmCard({film} : {film: Film | FilmCardType}) {
           {yearElement}
         </CardInfo>
       </CardContent>
-    </CardLi>
+    </CardDiv>
   );
 }

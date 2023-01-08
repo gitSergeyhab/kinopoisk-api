@@ -3,10 +3,10 @@ import styled from 'styled-components';
 // import { moviesMock } from '../../mock/movies-mock';
 import Pagination from '../pagination/pagination';
 import { useGetFilmsByParamsQuery } from '../../services/query-api';
-import { Film } from '../../types/types';
 import { FilmCard } from '../film-card/film-card';
 import LoadingLocal from '../loading-local/loading-local';
 import Loading from '../loading/loading';
+import { Error } from '../error/error';
 
 
 const FilmSection = styled.section`width: 100%;`;
@@ -30,6 +30,14 @@ const FilmUl = styled.ul`
   };
 `;
 
+export const Li = styled.li`
+background-color: #000000;
+
+  &:hover {
+    border: #FFFFFF 1px solid;
+  }
+`;
+
 
 export default function FilmsList() {
 
@@ -47,14 +55,14 @@ export default function FilmsList() {
   if (isError || !data) {
     // console.log('isError');
 
-    return <h2>isError</h2>;
+    return <Error/>;
   }
 
-  const films = data.docs as Film[];
+  const films = data.docs;
 
 
   const filmList = films.map((item) => (
-    <FilmCard key={item.id} film={item} />
+    <Li key={item.id}><FilmCard  film={item} /></Li>
   ));
 
 

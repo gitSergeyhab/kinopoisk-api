@@ -3,18 +3,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { DefaultPath } from '../../../const';
 import { useGetOneFilmQuery } from '../../../services/query-api';
-import { setPersonsPopup } from '../../../store/action';
-import { getPersonsPopupStatus } from '../../../store/popup-reducer/popup-reducer-selectos';
+import { setPopup } from '../../../store/action';
+import { getPopupStatus } from '../../../store/popup-reducer/popup-reducer-selectos';
 import { FilmCard, Person, SimilarMovie } from '../../../types/types';
 import { getPersonKey, getSyntheticRating, TryToTranslate } from '../../../utils/utils';
 import { AboutBlock } from '../../about-block/about-block';
 import { AdditionalBlock } from '../../additional-block/additional-block';
-import { Image, Subtitle3, WideButton } from '../../common/common.style';
+import { Image, ImageContainer, InfoBlock, InfoLi, InfoList, ListInfoBlock, PageSection, PageWrapper, StarsImageContainer, Subtitle3, TitlePage, TopPageBlock, WideButton } from '../../common/common.style';
+import { Error } from '../../error/error';
 import Loading from '../../loading/loading';
 import Stars from '../../stars/stars';
+import ModalPersonsInMovie from '../../_modals/modal-persons-in-movie/modal-persons-in-movie';
 
-import ModalMoviePersons from '../../_modals/modal-movie-persons/modal-movie-persons';
-import { AddImage, AddImageLink, AdditionalLi, AdditionalTitle, DescriptionSection, DirectorLink, FilmImageContainer, FilmInfoBlock, FilmTopBlock, InfoLi, InfoList, ListInfoBlock, OneFilmSection, SpanText, StarsImageContainer, TitlePage, Wrapper } from './one-film-page.style';
+import { AddImage, AddImageLink, AdditionalLi, AdditionalTitle, DescriptionSection, DirectorLink, SpanText } from './one-film-page.style';
 
 
 const StartValue = {
@@ -69,40 +70,27 @@ export default function OneFilmPage(){
   const [similarNum, setSimilarNum] = useState(StartValue.Similar);
 
   const dispatch = useDispatch();
-  // const isPersonsPopup = useSelector(getPersonsPopupStatus) || true;
-  const isPersonsPopup = useSelector(getPersonsPopupStatus);
+  const isPersonsPopup = useSelector(getPopupStatus);
 
 
   const handleMoreSimilarClick = () => setSimilarNum((num) => num + StartValue.Similar);
   const handleHideSimilarClick = () => setSimilarNum(StartValue.Similar);
 
 
-  const handleOpenAllPersonBtnClick = () => dispatch(setPersonsPopup(true));
+  const handleOpenAllPersonBtnClick = () => dispatch(setPopup(true));
 
 
   const {id} = useParams();
 
-  const {data, isError, isLoading, isFetching} = useGetOneFilmQuery(id as string);
-  // console.log(data);
-
+  const {data, isError, isLoading} = useGetOneFilmQuery(id as string);
 
   if (isLoading) {
-    // console.log('loading');
-  }
-
-  if (isFetching) {
-    // console.log('loading');
-
-    return <Loading/>;
+    <Loading/>;
   }
 
 
   if (isError || !data) {
-    // console.log('isError');
-    // if(isError) {console.log('isError!!!');}
-    // if(!data) {console.log('!data!!!');}
-
-    return <h2>isError</h2>;
+    return <Error/>;
   }
 
   const {name, enName, alternativeName, votes, year, rating, poster, description, countries, genres, persons, similarMovies} = data;
@@ -126,7 +114,7 @@ export default function OneFilmPage(){
 
   const btnOpenPersons = <WideButton id='modal-btn' onClick={handleOpenAllPersonBtnClick}>Открыть всех</WideButton>;
 
-  const personsPopup = isPersonsPopup ? <ModalMoviePersons persons={persons || []}/> : null;
+  const personsPopup = isPersonsPopup ? <ModalPersonsInMovie persons={persons || []}/> : null;
 
   const about = [
     {point: 'Наш рейтинг', value: ratingSynth,  our: true},
@@ -140,19 +128,19 @@ export default function OneFilmPage(){
 
 
   return (
-    <Wrapper>
-      <OneFilmSection>
+    <PageWrapper>
+      <PageSection>
         <TitlePage>{name || enName || alternativeName}</TitlePage>
-        <FilmTopBlock>
+        <TopPageBlock>
 
           <StarsImageContainer>
-            <FilmImageContainer>
+            <ImageContainer>
               <Image src={poster?.url || poster?.previewUrl || DefaultPath.Poster} alt={name || enName || alternativeName}/>
-            </FilmImageContainer>
+            </ImageContainer>
             <Stars filmCard={data as FilmCard}/>
           </StarsImageContainer>
 
-          <FilmInfoBlock>
+          <InfoBlock>
 
             {aboutBlock}
 
@@ -172,8 +160,8 @@ export default function OneFilmPage(){
                 <InfoList>{genreList}</InfoList>
               </div>
             </ListInfoBlock>
-          </FilmInfoBlock>
-        </FilmTopBlock>
+          </InfoBlock>
+        </TopPageBlock>
 
         <AdditionalBlock name='Персоны' elements={personList} button={btnOpenPersons}/>
 
@@ -183,10 +171,10 @@ export default function OneFilmPage(){
         {similarMoviesList?.length ? <AdditionalBlock name='Похожие фильмы' elements={similarMoviesList} button={btnMoreSimilar}/> : null}
 
 
-      </OneFilmSection>
+      </PageSection>
       {personsPopup}
 
-    </Wrapper>
+    </PageWrapper>
   );
 
 

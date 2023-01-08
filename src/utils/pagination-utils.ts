@@ -1,4 +1,4 @@
-const getUnique = (value: number, index: number, self: number[]) => self.indexOf(value) === index;
+import { getUnique } from './utils';
 
 
 const getNamedPages = (pages: number[], firstHiddenPage: number | null, lastHiddenPage: number | null) =>

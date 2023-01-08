@@ -19,13 +19,11 @@ background-color: #000000;
   max-width: 100%;
 `;
 
-export const CardLi = styled.li`
+export const CardDiv = styled.div`
   background-color: #000000;
   border: #000000 1px solid;
   transition: 0.15s all;
-  &:hover {
-    border: #FFFFFF 1px solid;
-  }
+
 
   & * {
     transition: 0.3s all;
@@ -85,3 +83,5 @@ export const NoImageText = styled.p`
   text-decoration: none;
   text-align: center;
 `;
+
+

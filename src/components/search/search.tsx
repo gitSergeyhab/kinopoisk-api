@@ -1,70 +1,84 @@
-// import { FormEvent, useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import { useGetFilmsByNameQuery } from '../../services/query-api';
-// import { Film } from '../../types/types';
+import { useState, useEffect, ChangeEventHandler } from 'react';
+import { useDebounce } from '../../hooks/use-debounce';
+import { useGetFilmsByNameQuery, useGetPersonsByNameQuery } from '../../services/query-api';
+import { ResultSearchType } from '../../types/types';
+import { FormWrapper, ResultHeader, ResultImg, ResultLi, ResultLink, ResultUl, SearchForm, SearchInput } from './search.style';
 
-import './search.css';
+
+const MIN_LENGTH_SEARCH = 4;
 
 
-// function OneSearchItem({film, onClickFilm}: {film: Film, onClickFilm: () => void}) {
-//   const {name, id} = film;
-//   const navigate = useNavigate();
-//   const handleFilmClick = () => {
-//     navigate(`/films/${id}`);
-//     onClickFilm();
-//   };
-//   return (
-//     <li className='collection-item'
-//       onClick={handleFilmClick}
-//       style={{ width: '100%', fontSize: '1rem', lineHeight: '1rem', backgroundColor: 'grey', padding: '0 2px', cursor: 'pointer'}}
-//       tabIndex={0}
-//     >
-//       {name}
-//     </li>
-//   );
-// }
+function OneSearchItem({name, id, type, year, image}: ResultSearchType) {
+
+  const yearField = type === 'films' ? 'год: ' : 'возраст: ';
+
+  return (
+    <ResultLi>
+      <ResultLink to={`/${type}/${id}`}>
+        <ResultImg src={image}/>
+        <span>{name}</span>
+        <span>
+          { year ? yearField : null}
+          {year}
+
+        </span>
+      </ResultLink>
+    </ResultLi>
+  );
+}
+
 
 export default function Search() {
 
-  // const [search, setSearch] = useState('');
-  // const [films, setFilms] = useState<Film[]>([]);
+  const [search, setSearch] = useState('');
+  const [movies, setMovies] = useState<ResultSearchType[]>([]);
+  const [persons, setPersons] = useState<ResultSearchType[]>([]);
 
-  // const x = useGetFilmsByNameQuery(search);
+  const debounceSearch = useDebounce(search, 1000);
 
-  // const handleSearchInput = (evt: FormEvent<HTMLInputElement>) => setSearch(evt.currentTarget.value);
-  // const handleSubmit = (evt: FormEvent) => {
-  //   evt.preventDefault();
-  //   setFilms(x.data.docs);
-  // };
+  const {data: dataMovies, isFetching: isMovieFetch} = useGetFilmsByNameQuery(debounceSearch, {skip: debounceSearch.length < MIN_LENGTH_SEARCH});
+  const {data: dataPersons, isFetching: isPersonFetch} = useGetPersonsByNameQuery(debounceSearch, {skip: debounceSearch.length < MIN_LENGTH_SEARCH});
 
-  // const handleOneFilmClick = () => {
-  //   setSearch('');
-  //   setFilms([]);
-  // };
+  useEffect(() => {
+    setMovies(dataMovies || []);
+    setPersons(dataPersons || []);
+  }, [dataMovies, dataPersons]);
 
+  const clear = () => {
+    setSearch('');
+    setMovies([]);
+    setPersons([]);
+  };
 
-  // const filmList = films.map((item) => <OneSearchItem key={item.id} film={item} onClickFilm={handleOneFilmClick}/>);
-  // const filmListUl = films.length ? <ul className='collection react-search-list'>{filmList}</ul> : null;
+  const handleSearchInput: ChangeEventHandler<HTMLInputElement> = (evt) => {
+    const value = evt.currentTarget.value;
+    setSearch(value);
+    if (value.length < MIN_LENGTH_SEARCH) {
+      setMovies([]);
+      setPersons([]);
+    }
+  };
+
+  const handleOneFilmClick = () => clear();
+
+  const movieElements = isMovieFetch && (search.length < MIN_LENGTH_SEARCH) ? [] : movies.map((item) =>
+    <OneSearchItem key={item.id} id={item.id} year={item.year} name={item.name} type={item.type} image={item.image}/>);
+
+  const personElements = isPersonFetch && (search.length < MIN_LENGTH_SEARCH) ? [] : persons.map((item) =>
+    <OneSearchItem key={item.id} id={item.id} year={item.year} name={item.name} type={item.type} image={item.image}/>);
 
   return (
-    <form
-      // onSubmit={handleSubmit}
-      className='react-search-form'
-    >
-      <div className="black" style={{height: '3rem', display: 'flex'}}>
-        <div className="input-field col">
-          <input
-            // onChange={handleSearchInput}
-            // value={search}
-            placeholder="Поиск по названию или по имени" id="search" type="text" className="validate orange-text" style={{ width: '20rem'}}
-          />
-        </div>
-        <button type="submit" className='react-search-btn'>
-          <i className="material-icons">search</i>
-        </button>
+    <FormWrapper id='search-form'>
+      <SearchForm>
+        <SearchInput onChange={handleSearchInput} value={search} />
+        <ResultUl onClick={handleOneFilmClick} >
+          {movieElements.length ? <ResultHeader>фильмы</ResultHeader> : null}
+          {movieElements}
+          {personElements.length ? <ResultHeader>люди</ResultHeader> : null}
+          {personElements}
+        </ResultUl>
 
-      </div>
-      {/* {filmListUl} */}
-    </form>
+      </SearchForm>
+    </FormWrapper>
   );
 }

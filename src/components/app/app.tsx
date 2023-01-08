@@ -12,32 +12,32 @@ import PersonPage from '../_pages/person-page/person-page';
 import styled from 'styled-components';
 
 export const enum AppRoute {
+  Main = '/',
   Films = '/films',
   Film = '/films/:id',
   Watched = '/watched',
   Persons = '/persons/:id',
 }
 
-// .react-one-page {
-//   display: flex;
-//   justify-content: center;
-// }
-
-// .react-one-page__wrapper {
-//   width: 80%;
-// }
 
 const Main = styled.main`
+min-width: 320px;
   width: 100%;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+
+  padding-bottom: 150px;
+
 `;
 
 const Wrapper = styled.div`
   width: 100%;
-  height: 100%;
+	min-height: 100%;
+  position: relative;
   background-color: #000000;
+
+
   & * {
     box-sizing: border-box;
   }
@@ -51,10 +51,13 @@ function App(): JSX.Element {
         <Header/>
         <Main>
           <Routes>
+            <Route path={AppRoute.Main} element={<FilmsPage/>}/>
+
             <Route path={AppRoute.Films} element={<FilmsPage/>}/>
             <Route path={AppRoute.Watched} element={<WatchedFilms/>}/>
             <Route path={AppRoute.Persons} element={<PersonPage/>}/>
             <Route path={AppRoute.Film} element={<OneFilmPage/>}/>
+
             <Route path='*' element={<div> НЕТ ТАКИХ</div>}/>
           </Routes>
         </Main>

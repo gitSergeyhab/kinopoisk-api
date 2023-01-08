@@ -1,54 +1,28 @@
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import { useGetOnePersonQuery } from '../../../services/query-api';
-import { MovieInPerson } from '../../../types/types';
+import { setPopup } from '../../../store/action';
+import { getPopupStatus } from '../../../store/popup-reducer/popup-reducer-selectos';
 import { formatDateDDMonthYYYY } from '../../../utils/date-utils';
+import { AboutBlock } from '../../about-block/about-block';
+import { Image, ImageContainer, InfoBlock, InfoLi, InfoList, ListInfoBlock, PageSection, PageWrapper, StarsImageContainer, Subtitle3, TitlePage, TopPageBlock, WideButton } from '../../common/common.style';
 import Loading from '../../loading/loading';
-import PersonFilmList from '../../person-film-list/person-film-list';
+import ModalMoviesOfPerson from '../../_modals/modal-movies-of-person/modal-movies-of-person';
+import { BtnWrapper } from './person-page.style';
 
-import './person-page.css';
-
-
-const filterMovie = (movies: MovieInPerson[] | undefined) => {
-  if (!movies) {
-    return null;
-  }
-  const idsUnique = [...new Set(movies.map((item) => item.id))];
-  const newMovies = idsUnique.map((item) => movies.find((oldMovie) => oldMovie.id === item));
-  return newMovies as MovieInPerson[];
-};
-
-// function PersonFilm({movie} : {movie: MovieInPerson}) {
-
-//   const {id, description, name, rating} = movie;
-
-//   return (
-//     <li className="collection-item grey darken-3 react-person-movies__item">
-//       <p className="title react-person-movies__paragraph react-person-movies__paragraph--title">
-//         {name || 'Нет названия'}
-//       </p>
-//       <p className="react-person-movies__paragraph react-person-movies__paragraph--description">
-//         {description || 'Нет описания'}
-//       </p>
-//       <p className="react-person-movies__paragraph">
-//         {rating} <i className="material-icons">star_border</i>
-//       </p>
-
-//       <Link to={`/films/${id}`} className="secondary-content">
-//         Перейти
-//       </Link>
-//     </li>
-//   );
-// }
 
 export default function PersonPage(){
 
 
   const {id} = useParams();
+  const dispatch = useDispatch();
+  const isPopup = useSelector(getPopupStatus);
+  const {data, isError, isLoading} = useGetOnePersonQuery(id as string);
 
-  const {data, isError, isFetching} = useGetOnePersonQuery(id as string);
+  const handleOpenPopup = () => dispatch(setPopup(true));
 
-  if (isFetching) {
+  if (isLoading) {
     return <Loading/>;
   }
 
@@ -56,7 +30,9 @@ export default function PersonPage(){
     return <h2>isError</h2>;
   }
 
-  const {name, birthPlace, birthday, death, movies, photo, profession, sex, age} = data;
+  const {name, birthPlace, birthday, death, movies, photo, profession, sex, age, enName} = data;
+  const moviesPopup = isPopup ? <ModalMoviesOfPerson movies={movies || []}/> : null;
+
 
   const birthdayString = birthday ? formatDateDDMonthYYYY(birthday) : 'Неизвестна';
   const deathString = death ? formatDateDDMonthYYYY(death) : null;
@@ -64,11 +40,8 @@ export default function PersonPage(){
   const professionList = (profession && profession.length) ?
     profession
       .map((item) => item.value || null)
-      .filter((item) => !!item).join(', ') : null;
+      .filter((item) => !!item) : null;
 
-  const filteredMovies = filterMovie(movies);
-
-  const movieList = filteredMovies && filteredMovies.length ? <PersonFilmList movies={filteredMovies}/> : null;
 
   const birthPlaceList = birthPlace && birthPlace.length ?
     birthPlace
@@ -76,54 +49,51 @@ export default function PersonPage(){
       .filter((item) => !!item).join(', ') : null;
 
 
+  const about = [
+    {point: 'Дата рождения', value: birthdayString,  simple: true},
+    {point: 'Дата смерти', value: deathString,  simple: true},
+    {point: 'Место рождения', value: birthPlaceList ,  simple: true},
+    {point: 'Возраст', value: age, simple: true},
+    {point: 'Пол', value: sex, simple: true},
+
+  ];
+
+  const professionElements = professionList ? (professionList as string[]).map((item) => <InfoLi key={item}> {item} </InfoLi>) : null;
+
+  const aboutBlock = <AboutBlock about={about}/>;
+
   return (
-    <div className="row black">
-      <div className="col s2"></div>
-      <div className="col s8 brown darken-3 white-text text-lighten-4">
-        <h2 className="header center-align">{name}</h2>
-        <div className="card horizontal blue-grey darken-1 black-text">
-          <div className="card-image">
-            <img src={photo} alt={name}/>
-          </div>
-          <div className="card-stacked">
-            <div style={{padding: '1rem', fontSize: '1.8rem'}} className='blue-grey'>
-              <p>Дата рожнкния : {birthdayString}</p>
+    <PageWrapper>
+      <PageSection>
+        <TitlePage>{ name || enName }</TitlePage>
+        <TopPageBlock>
+          <StarsImageContainer>
+            <ImageContainer>
+              <Image src={photo} alt={name || enName}/>
+            </ImageContainer>
+          </StarsImageContainer>
 
-              <p>Место рожнкния : {birthPlaceList ? birthPlaceList : 'Неизвестно'}</p>
+          <InfoBlock>
 
-              { deathString ? <p>Дата мерти : {deathString}</p> : null }
+            {aboutBlock}
 
-              { <p> Возраст: {age ? age : 'Неизвестен'}</p> }
+            <ListInfoBlock>
+              <div>
+                <Subtitle3 >Профессии:</Subtitle3>
+                <InfoList>{professionElements}</InfoList>
+              </div>
+            </ListInfoBlock>
+          </InfoBlock>
 
-              <p>Профессии : {professionList ? professionList : 'Неизвестно'}</p>
+        </TopPageBlock>
 
-              <p>Пол : {sex ? sex : 'Неизвестно'}</p>
+        <BtnWrapper>
+          <WideButton id='modal-btn' onClick={handleOpenPopup}>фильмография</WideButton>
+        </BtnWrapper>
+      </PageSection>
 
-            </div>
+      {moviesPopup}
 
-          </div>
-
-
-        </div>
-
-        <div className="card-content grey black-text row">
-          <p className="col s2"></p>
-        </div>
-
-        <div className="card-action  center-align">
-          <h4 className='center-align'><p>Фильмы</p></h4>
-
-          <div className="blue-grey darken-2" style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around'}}>
-            <ul className="collection react-person-movies">
-              {movieList ? movieList : 'Неизвестно'}
-            </ul>
-
-
-          </div>
-        </div>
-
-
-      </div>
-    </div>
+    </PageWrapper>
   );
 }

@@ -1,14 +1,14 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { setPersonsPopup } from '../action';
+import { setPopup } from '../action';
 
 export type State = {
   isPersonsPopup: boolean;
 }
 
 const initState = {
-  isPersonsPopup: false,
+  isPopup: false,
 };
 
 export const popupReducer = createReducer(initState, (builder) => {
-  builder.addCase(setPersonsPopup, (state, action) => {state.isPersonsPopup = action.payload;});
+  builder.addCase(setPopup, (state, action) => {state.isPopup = action.payload;});
 });

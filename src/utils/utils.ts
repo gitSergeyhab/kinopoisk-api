@@ -36,3 +36,5 @@ export const getSyntheticRating = (rating?: ResourceNum, votes?: ResourceNum) : 
 
 export const TryToTranslate = (enWord: string | undefined) => enWord ? TranslateDict[enWord] || enWord : '';
 
+type StrNum = string | number
+export const getUnique = (value:  StrNum, index: number, self:  StrNum[]) => self.indexOf(value) === index;

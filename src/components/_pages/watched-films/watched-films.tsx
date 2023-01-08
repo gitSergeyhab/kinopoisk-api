@@ -5,15 +5,14 @@ import { getDb } from '../../../store/local-db-reducer/local-db-reducer-selector
 import { FilmCardData } from '../../../types/types';
 import { rebaseOrdersInDB, writeFilmDBtoStorage } from '../../../utils/storage-utils';
 import { FilmCard } from '../../film-card/film-card';
+import { DnDSection, DragCardLi, DragCardList } from './watched-films.style';
 
 import './watched-films.css';
-
 
 const DragClass = {
   Start: 'react-card--start',
   Over: 'react-card--over',
 };
-
 
 type DragFilmCardType = {filmCardData: FilmCardData, start: number | null, setStart: () => void}
 
@@ -23,27 +22,27 @@ function DragFilmCard({filmCardData, start, setStart} : DragFilmCardType) {
   const dispatch = useDispatch();
 
 
-  const handleDragStart = (evt: DragEvent<HTMLDivElement>) => {
+  const handleDragStart = (evt: DragEvent<HTMLLIElement>) => {
     evt.currentTarget.classList.add(DragClass.Start);
     setStart();
   };
 
-  const handleDragLeave = (evt: DragEvent<HTMLDivElement>) => {
+  const handleDragLeave = (evt: DragEvent<HTMLLIElement>) => {
     evt.currentTarget.classList.remove(DragClass.Over);
   };
 
-  const handleDragEnd = (evt: DragEvent<HTMLDivElement>) => {
+  const handleDragEnd = (evt: DragEvent<HTMLLIElement>) => {
     evt.currentTarget.classList.remove(DragClass.Start);
 
 
   };
-  const handleDragOver = (evt: DragEvent<HTMLDivElement>) => {
+  const handleDragOver = (evt: DragEvent<HTMLLIElement>) => {
     evt.preventDefault();
     evt.currentTarget.classList.add(DragClass.Over);
 
   };
 
-  const handleDrop = (evt: DragEvent<HTMLDivElement>) => {
+  const handleDrop = (evt: DragEvent<HTMLLIElement>) => {
     evt.preventDefault();
     evt.currentTarget.classList.remove(DragClass.Over);
 
@@ -55,17 +54,16 @@ function DragFilmCard({filmCardData, start, setStart} : DragFilmCardType) {
 
 
   return (
-    <div
+    <DragCardLi
       draggable
       onDragStart={handleDragStart}
       onDragLeave={handleDragLeave}
       onDragEnd={handleDragEnd}
       onDragOver={handleDragOver}
       onDrop={handleDrop}
-      className="card col s6 m4 l3 gap1 react-card"
     >
       <FilmCard film={filmCardData.filmCard}/>
-    </div>
+    </DragCardLi>
   );
 }
 
@@ -76,18 +74,11 @@ export default function WatchedFilms () {
 
   const [start, setStart] = useState<null | number>(null);
 
-
   if (!filmCardObjet || !Object.values(filmCardObjet).length) {
     return (
-      <div className="row black">
-        <div className="col s1">
-
-        </div>
-        <div className="col s10 brown darken-3 text-lighten-4">
-          <h2 className="header center-align orange-text">У вас нет оцененных фильнов</h2>
-
-        </div>
-      </div>
+      <DnDSection>
+        <h2>У вас нет оцененных фильнов</h2>
+      </DnDSection>
     );
   }
 
@@ -98,35 +89,29 @@ export default function WatchedFilms () {
     .map((item: FilmCardData) =>
       (
         <DragFilmCard
-          start={start} setStart={() => setStart(item.order)}
-          key={item.filmCard.id} filmCardData={item}
+          start={start}
+          setStart={() => setStart(item.order)}
+          key={item.filmCard.id}
+          filmCardData={item}
         />
       ));
 
-
-  // const handleTestClick = () => getTest();
-
-
   return(
 
-    <div className="row black">
+    <DnDSection>
 
-      <div className="col s1"></div>
-      <div className="col s10 brown darken-3 text-lighten-4">
-        <h2 className="header center-align orange-text">Оцененныые фильмы</h2>
-        <p className='white-text center-align'>Можно менять положение карточек перетаскиванием</p>
-        <p className='white-text center-align'>
+      <h1>Оцененныые фильмы</h1>
+      <p>Можно менять положение карточек перетаскиванием</p>
+      <p>
           (D-N-D реализован без использования доп библиотек,
           данные хранятся в localStorage - Kinopoisk-API нет возможности сохранять оценки на сервере)
-        </p>
-        <div style={{display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap'}}>
+      </p>
+      <DragCardList>
 
-          {filmCardsList}
+        {filmCardsList}
 
-
-        </div>
-      </div>
-    </div>
+      </DragCardList>
+    </DnDSection>
 
   );
 }

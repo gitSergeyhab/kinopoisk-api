@@ -1,48 +1,94 @@
+import styled from 'styled-components';
 
 const USED_LIBRARIES = [
   {name: 'react', href: 'https://www.npmjs.com/package/react'},
   {name: '@reduxjs/toolkit', href: 'https://www.npmjs.com/package/@reduxjs/toolkit'},
-  {name: 'axios', href: 'https://www.npmjs.com/package/axios'},
-  {name: 'materialize-css', href: 'https://www.npmjs.com/package/materialize-css'},
+  {name: 'styled-components', href: 'https://www.npmjs.com/package/styled-components'},
   {name: 'nouislider-react', href: 'https://www.npmjs.com/package/nouislider-react'},
   {name: 'react-select', href: 'https://www.npmjs.com/package/react-select'},
 ];
 
 
+const FooterEl = styled.footer`
+  width: 100%;
+  box-sizing: border-box;
+  padding: 1rem;
+  box-shadow: 0px -5px 8px 0px rgba(178, 181, 184, 0.4);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+  height: 140px;
+
+  @media (min-width: 600px) {
+    padding: 2rem;
+  };
+
+  @media (min-width: 900px) {
+    padding: 2rem 4rem;
+  };
+
+  @media (min-width: 1200px) {
+    padding: 2rem 8rem;
+  };
+
+  & * {
+    box-sizing: border-box;
+    transition: 0.3s all;
+  }
+`;
+
+const Part = styled.div`
+  width: 50%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ResourceList = styled.ul`
+  list-style: none;
+  margin: 0;
+  padding: 0;
+`;
+
+const SideLink = styled.a`
+  color: #FFFFFF;
+  text-decoration: none;
+
+  &:hover {
+    color: orange;
+  }
+
+`;
+
 function NPMLink ({library} : {library : {name: string, href: string}}) {
-  return <li><a className="grey-text text-lighten-3" href={library.href} target={'_blank'} rel="noreferrer">{library.name}</a></li>;
+  return <li><SideLink href={library.href} target={'_blank'} rel="noreferrer">{library.name}</SideLink></li>;
 }
 
 
 export default function Footer() {
 
   const libraryList = USED_LIBRARIES.map((item) => <NPMLink key={item.name} library={item}/>);
+
   return (
-    <footer className="page-footer grey darken-3">
-      <div className="container">
-        <div className="row">
-          <div className="col l6 s12">
+    <FooterEl>
 
-            <h5 className="white-text">Использованные библиотеки</h5>
-            <ul>
+      <Part>
 
-              {libraryList}
+        <ResourceList>
+          {libraryList}
+        </ResourceList>
 
-            </ul>
+      </Part>
+      <Part>
+        <p className="grey-text text-lighten-4"><SideLink href='https://github.com/gitSergeyhab' target='_blank' rel="noreferrer">Мой GitHub</SideLink></p>
+      </Part>
 
-          </div>
-          <div className="col l4 offset-l2 s12">
-
-            <h5 className="white-text">Мой GitHub</h5>
-            <p className="grey-text text-lighten-4"><a className="grey-text text-lighten-3" href='https://github.com/gitSergeyhab' target='_blank' rel="noreferrer">Мой GitHub</a></p>
-          </div>
-        </div>
-      </div>
-      <div className="footer-copyright">
-        <div className="container">
-          ...
-        </div>
-      </div>
-    </footer>
+    </FooterEl>
   );
 }
