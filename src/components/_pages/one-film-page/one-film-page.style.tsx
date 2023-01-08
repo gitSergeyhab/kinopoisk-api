@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { Image } from '../../common/common.style';
 
 export const Wrapper = styled.div`
   width: 100%;
@@ -8,7 +9,7 @@ export const Wrapper = styled.div`
   @media (min-width: 600px) {
     padding: 0 5%;
   };
-  
+
   @media (min-width: 900px) {
     padding: 0 10%;
   };
@@ -33,7 +34,7 @@ export const TitlePage = styled.h1`
   @media (min-width: 600px) {
     font-size: 28px;
   };
-  
+
   @media (min-width: 900px) {
     font-size: 32px;
   };
@@ -59,18 +60,11 @@ background-color: #212121;
   @media (min-width: 600px) {
     width: 50%;
   };
-
 `;
 
-export const Image = styled.img`
-background-color: #000000;
-  width: 100%;
-
-
-`;
 
 export const FilmTopBlock = styled.div`
-  
+
   display: flex;
   flex-direction: column;
   color: #FFFFFF;
@@ -105,25 +99,13 @@ width: 100%;
 
 export const ListInfoBlock = styled.div``;
 
-export const Subtitle2 = styled.h2`
-  color: #000000;
-  font-size: 24px;
-  text-align: center;
-`;
-
-export const Subtitle3 = styled.h3`
-  color: #FFFFFF;
-  font-size: 22px;
-  text-align: start;
-  padding-left: 1rem;
-  margin: 0.5rem 0;
-`;
 
 export const InfoList = styled.ul`
   list-style: none;
   margin: 0.5rem 0 1rem;
   background-color: #424242;
   padding: 10px;
+  box-shadow: 1px 0px 4px 2px rgb(0, 0, 0, 0.3) inset;
 `;
 
 export const InfoLi = styled.li`
@@ -147,4 +129,67 @@ export const DirectorLink = styled(Link)`
   &:hover {
     color: orange;
   }
+`;
+
+
+export const SimpleText = styled.p`
+  font-size: 14px;
+
+@media (min-width: 900px) {
+  font-size: 16px;
+};
+
+@media (min-width: 1200px) {
+  font-size: 20px;
+};
+`;
+
+
+export const SpanText = styled.span`
+  font-size: 20px;
+  text-align: center;
+  margin: 0.2rem 0;
+`;
+
+
+export const AddImage = styled(Image)`
+background-color: #424242;
+&:hover {
+  box-shadow: 1px 0px 4px 4px rgb(0, 0, 0, 0.3);
+}
+`;
+
+export const AddImageLink = styled(Link)`
+display: block;
+height: 280px;
+`;
+
+export const DescriptionSection = styled.section`
+color: #FFFFFF;
+background-color: #212121;
+padding: 1rem 2rem;
+
+font-size: 18px;
+
+
+@media (min-width: 900px) {
+  font-size: 22px;
+};
+
+@media (min-width: 1200px) {
+  font-size: 26px;
+};
+`;
+
+export const AdditionalLi = styled.li`
+text-align: center;
+  width: 100%;
+  height: 100%;
+`;
+
+export const AdditionalTitle = styled.h3`
+  color: #FFFFFF;
+  font-size: 22px;
+  text-align: center;
+  margin: 0.5rem 0;
 `;

@@ -26,6 +26,10 @@ const StarsUL = styled.ul`
   padding: 6px 0;
   background-color: #424242;
   border: 1px solid #FFFFFF;
+  box-shadow: 1px 0px 4px 2px rgb(255, 255, 255, 0.3) inset;
+  &:hover {
+    box-shadow: 1px 0px 4px 2px rgb(255, 255, 255, 0.5) inset;
+  }
 `;
 
 type Void = () => void;

@@ -1,3 +1,5 @@
+import { SimpleDict } from './types/types';
+
 export const TOO_MANY_VOTES = 999999999;
 
 
@@ -81,3 +83,8 @@ export const ORDER_CATEGORIES = [
 export const enum DefaultPath {
   Poster = '/img/default/default-poster.jpg'
 }
+
+export const TranslateDict: SimpleDict = {
+  actor: 'актёр',
+  director: 'режисёр',
+};

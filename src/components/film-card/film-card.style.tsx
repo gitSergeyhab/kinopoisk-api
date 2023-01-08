@@ -44,7 +44,7 @@ export const Title = styled.h3`
   word-break: break-word; /* для Chrome */
   min-height: 80px;
 
-  
+
   @media (min-width: 1400px) {
     font-size: 1.5rem;
   };
@@ -68,6 +68,7 @@ export const TitleLink = styled(Link)`
 `;
 
 export const ImageLink = styled(Link)`
+display: block;
 `;
 
 export const CardContent = styled.div`

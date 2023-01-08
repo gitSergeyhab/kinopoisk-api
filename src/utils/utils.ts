@@ -1,3 +1,4 @@
+import { TranslateDict } from '../const';
 import { ResourceNum } from '../types/types';
 
 export const round10 = (num: number) => Math.round(num * 10) / 10;
@@ -32,4 +33,6 @@ export const getSyntheticRating = (rating?: ResourceNum, votes?: ResourceNum) : 
   return {ratingSynth : round100(audienceRating), forAudience : null, forCritics : null};
 };
 
+
+export const TryToTranslate = (enWord: string | undefined) => enWord ? TranslateDict[enWord] || enWord : '';
 
