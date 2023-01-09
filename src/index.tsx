@@ -6,16 +6,19 @@ import { Provider } from 'react-redux';
 import { store } from './store/store';
 import { setLocalDB } from './store/action';
 import { getFilmsDataFromStorage } from './utils/storage-utils';
+import { ToastContainer } from 'react-toastify';
 
 import 'normalize.css';
+import 'react-toastify/dist/ReactToastify.css';
 
-// загрузить БД из локал-стораж в редюсер  (при обнослении данных: в редюсере - компонент перерендеривается, в ЛС - нет)
 const storageDb = getFilmsDataFromStorage();
 store.dispatch(setLocalDB(storageDb));
 
 
 ReactDOM.render(
   <React.StrictMode>
+
+    <ToastContainer/>
     <Provider store={store}>
       <App />
     </Provider>

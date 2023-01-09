@@ -39,7 +39,7 @@ export const Title = styled.h3`
   text-align: center;
   font-size: 18px;
   word-wrap: break-word;
-  word-break: break-word; /* для Chrome */
+  word-break: break-word;
   min-height: 80px;
 
 

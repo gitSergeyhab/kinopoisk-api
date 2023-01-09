@@ -2,8 +2,8 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const ErrorSection = styled.section`
-  width: 90%;
-  height: 90%;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -26,10 +26,11 @@ const MainLink = styled(Link)`
   }
 `;
 
-export function Error() {
+export function Error({message} : {message?: string}) {
+  const headerText = message || 'Что-то пошло не так ...';
   return (
     <ErrorSection>
-      <h1> Что-то пошло не так ... </h1>
+      <h1> {headerText} </h1>
       <h2><MainLink to={'/'}> На главную</MainLink></h2>
     </ErrorSection>
 

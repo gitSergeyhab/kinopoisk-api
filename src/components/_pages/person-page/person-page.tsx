@@ -5,9 +5,11 @@ import { useGetOnePersonQuery } from '../../../services/query-api';
 import { setPopup } from '../../../store/action';
 import { getPopupStatus } from '../../../store/popup-reducer/popup-reducer-selectos';
 import { formatDateDDMonthYYYY } from '../../../utils/date-utils';
+import { toastError } from '../../../utils/error-utils';
 import { AboutBlock } from '../../about-block/about-block';
 import { Image, ImageContainer, InfoBlock, InfoLi, InfoList, ListInfoBlock, PageSection, PageWrapper, StarsImageContainer, Subtitle3, TitlePage, TopPageBlock, WideButton } from '../../common/common.style';
-import Loading from '../../loading/loading';
+import { Error } from '../../error/error';
+import LoadingLocal from '../../loading-local/loading-local';
 import ModalMoviesOfPerson from '../../_modals/modal-movies-of-person/modal-movies-of-person';
 import { BtnWrapper } from './person-page.style';
 
@@ -18,16 +20,17 @@ export default function PersonPage(){
   const {id} = useParams();
   const dispatch = useDispatch();
   const isPopup = useSelector(getPopupStatus);
-  const {data, isError, isLoading} = useGetOnePersonQuery(id as string);
+  const {data, isError, isLoading, error} = useGetOnePersonQuery(id as string);
 
   const handleOpenPopup = () => dispatch(setPopup(true));
 
   if (isLoading) {
-    return <Loading/>;
+    return <LoadingLocal/>;
   }
 
   if (isError || !data) {
-    return <h2>isError</h2>;
+    toastError(error);
+    return <Error/>;
   }
 
   const {name, birthPlace, birthday, death, movies, photo, profession, sex, age, enName} = data;

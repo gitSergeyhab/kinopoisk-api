@@ -90,6 +90,9 @@ export const ImageContainer = styled.div`
 export const PageWrapper = styled.div`
   width: 100%;
 
+  & * {
+    transition: all 0.3s;
+  }
 
   @media (min-width: 600px) {
     padding: 0 5%;

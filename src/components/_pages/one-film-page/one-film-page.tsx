@@ -6,12 +6,13 @@ import { useGetOneFilmQuery } from '../../../services/query-api';
 import { setPopup } from '../../../store/action';
 import { getPopupStatus } from '../../../store/popup-reducer/popup-reducer-selectos';
 import { FilmCard, Person, SimilarMovie } from '../../../types/types';
+import { toastError } from '../../../utils/error-utils';
 import { getPersonKey, getSyntheticRating, TryToTranslate } from '../../../utils/utils';
 import { AboutBlock } from '../../about-block/about-block';
 import { AdditionalBlock } from '../../additional-block/additional-block';
 import { Image, ImageContainer, InfoBlock, InfoLi, InfoList, ListInfoBlock, PageSection, PageWrapper, StarsImageContainer, Subtitle3, TitlePage, TopPageBlock, WideButton } from '../../common/common.style';
 import { Error } from '../../error/error';
-import Loading from '../../loading/loading';
+import LoadingLocal from '../../loading-local/loading-local';
 import Stars from '../../stars/stars';
 import ModalPersonsInMovie from '../../_modals/modal-persons-in-movie/modal-persons-in-movie';
 
@@ -82,14 +83,15 @@ export default function OneFilmPage(){
 
   const {id} = useParams();
 
-  const {data, isError, isLoading} = useGetOneFilmQuery(id as string);
+  const {data, isError, isLoading, error} = useGetOneFilmQuery(id as string);
 
   if (isLoading) {
-    <Loading/>;
+    return <LoadingLocal/>;
   }
 
 
   if (isError || !data) {
+    toastError(error);
     return <Error/>;
   }
 

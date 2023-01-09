@@ -14,6 +14,10 @@ export const DnDSection = styled.section`
     padding: 1rem;
   };
 
+  transition: all 0.3s;
+  & * {
+    transition: all 0.3s;
+  }
 `;
 
 export const DragCardList = styled.ul`

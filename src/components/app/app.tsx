@@ -10,6 +10,7 @@ import Footer from '../footer/footer';
 import './app.css';
 import PersonPage from '../_pages/person-page/person-page';
 import styled from 'styled-components';
+import { Error } from '../error/error';
 
 export const enum AppRoute {
   Main = '/',
@@ -21,13 +22,13 @@ export const enum AppRoute {
 
 
 const Main = styled.main`
-min-width: 320px;
+  min-width: 320px;
   width: 100%;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 
-  padding-bottom: 150px;
+  padding-bottom: 160px;
 
 `;
 
@@ -58,7 +59,7 @@ function App(): JSX.Element {
             <Route path={AppRoute.Persons} element={<PersonPage/>}/>
             <Route path={AppRoute.Film} element={<OneFilmPage/>}/>
 
-            <Route path='*' element={<div> НЕТ ТАКИХ</div>}/>
+            <Route path='*' element={<Error message='Нет такой страницы'/>}/>
           </Routes>
         </Main>
         <Footer/>

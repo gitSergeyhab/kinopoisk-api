@@ -93,3 +93,11 @@ export const FormWrapper = styled.section`
   justify-content: center;
   align-items: center;
 `;
+
+export const BadNewsMessage = styled.div`
+  text-align: center;
+  color: #FFFFFF;
+  width: 100%;
+  font-size: 12px;
+  padding-top: 2px;
+`;

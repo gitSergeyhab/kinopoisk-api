@@ -22,7 +22,6 @@ export const PopupBody = styled.div`
   display: flex;
 
   justify-content: center;
-  /* padding: 30px 10px; */
 `;
 
 

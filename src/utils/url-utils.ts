@@ -2,7 +2,7 @@ import { Field, FieldType, FilterRange, SORT_CATEGORIES, TOO_MANY_VOTES } from '
 import { OptionType, SimpleDict } from '../types/types';
 
 
-const TOKEN = process.env.REACT_APP_KP_TOKEN;
+const TOKEN =  process.env.REACT_APP_KP_TOKEN;
 
 
 const createFilterField = (key: string, value: string) => `field=${key}&search=${value}`;

@@ -1,11 +1,9 @@
 import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-// import { moviesMock } from '../../mock/movies-mock';
 import Pagination from '../pagination/pagination';
 import { useGetFilmsByParamsQuery } from '../../services/query-api';
 import { FilmCard } from '../film-card/film-card';
 import LoadingLocal from '../loading-local/loading-local';
-import Loading from '../loading/loading';
 import { Error } from '../error/error';
 
 
@@ -36,8 +34,15 @@ background-color: #000000;
   &:hover {
     border: #FFFFFF 1px solid;
   }
+  transition: all 0.3s;
+  & * {
+    transition: all 0.3s;
+  }
 `;
 
+type ModifyData = {
+  status?: string
+}
 
 export default function FilmsList() {
 
@@ -45,17 +50,25 @@ export default function FilmsList() {
   const {search} = useLocation();
 
 
-  const {isError, isFetching, isLoading, data} = useGetFilmsByParamsQuery(search);
+  const {isError, isLoading, isFetching, data} = useGetFilmsByParamsQuery(search);
 
 
   if (isLoading) {
-    return <Loading/>;
+    return (
+      <FilmSection><LoadingLocal/></FilmSection>
+    );
   }
 
-  if (isError || !data) {
-    // console.log('isError');
+  if (isError || !data || (data as ModifyData).status === 'error') {
+    return <FilmSection><Error/></FilmSection>;
+  }
 
-    return <Error/>;
+  if (!data.docs.length) {
+    return (
+      <FilmSection>
+        <Error message='По вашему запросу ничего не найдено. Попробуйте изменить параметры фильтра'/>
+      </FilmSection>
+    );
   }
 
   const films = data.docs;

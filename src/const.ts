@@ -88,3 +88,21 @@ export const TranslateDict: SimpleDict = {
   actor: 'актёр',
   director: 'режисёр',
 };
+
+
+export const enum ErrorMessage {
+  Unauthorized = 'Нет доступа - отсутствует токен или он неверен',
+  Forbidden = 'Нет доступа - лимит запрсов исчерпан или срок действия токена истек',
+  Server = 'Апи сломался. Ждем ...',
+  NotFound = 'По запросу ничего не найденно',
+  BadRequest = 'Запрос некорректен',
+  Unknown = 'Видимо, что-то случилось ...'
+}
+
+export const enum ErrorStatus {
+  Unauthorized = 401,
+  Forbidden = 403,
+  Server = 500,
+  NotFound = 404,
+  BadRequest = 400
+}

@@ -104,7 +104,7 @@ export default function WatchedFilms () {
       <p>Можно менять положение карточек перетаскиванием</p>
       <p>
           (D-N-D реализован без использования доп библиотек,
-          данные хранятся в localStorage - Kinopoisk-API нет возможности сохранять оценки на сервере)
+          данные хранятся в localStorage - у Kinopoisk-API нет возможности сохранять оценки на сервере)
       </p>
       <DragCardList>
 
